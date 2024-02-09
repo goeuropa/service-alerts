@@ -18,12 +18,12 @@ import java.util.List;
 @Slf4j
 @EnableScheduling
 @Component
-public class AlertsCacheManager implements Serializable {
+public class CacheManager implements Serializable {
 
     /**
      * Make this class available as a singleton
      */
-    private static AlertsCacheManager singleton = new AlertsCacheManager();
+    private static CacheManager singleton = new CacheManager();
 
 
     @Value("${alert-api.zoneId}")
@@ -35,14 +35,14 @@ public class AlertsCacheManager implements Serializable {
     @Value("${alert-api.outPath}")
     private String OUTPUT_PATH;
 
-    private List<ServiceAlert> serviceAlertList = new LinkedList<>();
+    private static List<ServiceAlert> serviceAlertList = new LinkedList<>();
 
     /**
      * Gets the singleton instance of this class.
      *
      * @return
      */
-    public static AlertsCacheManager getInstance() {
+    public static CacheManager getInstance() {
         return singleton;
     }
 
@@ -50,14 +50,14 @@ public class AlertsCacheManager implements Serializable {
      * Constructor declared private to enforce only access to this singleton
      * class being getInstance()
      */
-    private AlertsCacheManager() {
+    private CacheManager() {
     }
 
 
     /**
      * Add the alert to list.
      */
-    public void putToAlertList(ServiceAlert alert) {
+    public void addToAlertList(ServiceAlert alert) {
         log.info("Add to cache a service alert : {}", alert);
         serviceAlertList.add(alert);
     }
@@ -106,7 +106,7 @@ public class AlertsCacheManager implements Serializable {
             var objectToFile = new ObjectOutputStream(toFile);
             objectToFile.writeObject(serviceAlertList);
 
-            log.info("Succesfully safe {} alerts cache list to file : {}", serviceAlertList.size(), OUTPUT_PATH);
+            log.info("Succesfully safe {} alerts to cache list file : {}", serviceAlertList.size(), OUTPUT_PATH);
 
             objectToFile.close();
         } catch (Exception e) {

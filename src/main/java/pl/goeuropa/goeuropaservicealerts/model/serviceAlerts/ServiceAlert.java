@@ -18,26 +18,26 @@ package pl.goeuropa.goeuropaservicealerts.model.serviceAlerts;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.List;
 
+@ToString
 @Data
 @NoArgsConstructor
 public class ServiceAlert implements Serializable {
 
   private static final long serialVersionUID = 1L;
+
   private String id;
   private long creationTime;
-  private TimeRange activeWindows;
-  private TimeRange publicationWindows;
-  private String reason;
-  private NaturalLanguageStringBean summaries;
-  private NaturalLanguageStringBean descriptions;
-  private NaturalLanguageStringBean urls;
-  private SituationAffects allAffects;
-  private SituationConsequence consequences;
-  private Severity severity;
-  private String source;
+  private List<TimeRange> activeWindows;
+  private String cause;
+  private String effect;
+  private List<NaturalLanguageString> summaries;
+  private List<NaturalLanguageString> urls;
+  private List<SituationAffects> allAffects;
+  private List<NaturalLanguageString> descriptions;
 
 }

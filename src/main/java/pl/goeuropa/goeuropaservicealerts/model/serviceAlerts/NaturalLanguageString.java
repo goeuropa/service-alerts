@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2011 Brian Ferris <bdferris@onebusaway.org>
+ * Copyright (C) 2011 Google, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +16,19 @@
  */
 package pl.goeuropa.goeuropaservicealerts.model.serviceAlerts;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class DefaultedText extends NaturalLanguageStringBean {
+@AllArgsConstructor
+public class NaturalLanguageString implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  private Boolean overridden;
+  private String value;
+
+  private String lang;
 
 }

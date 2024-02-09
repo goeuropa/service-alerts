@@ -29,19 +29,9 @@ public final class SituationAffects implements Serializable {
 
   private String routeId;
 
-  private String directionId;
-
   private String tripId;
 
   private String stopId;
 
-  private String applicationId;
-
-  private String routePartRouteId;
-
-  private String agencyPartRouteId;
-
-  private String agencyPartStopId;
-
-  private String stopPartStopId;
+  private String routType;
 }

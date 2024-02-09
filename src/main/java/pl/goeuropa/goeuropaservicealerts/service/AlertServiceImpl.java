@@ -1,64 +1,50 @@
 package pl.goeuropa.goeuropaservicealerts.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.transit.realtime.GtfsRealtime;
-import com.google.transit.realtime.GtfsRealtime.Alert.*;
-import com.google.transit.realtime.GtfsRealtime.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
+import pl.goeuropa.goeuropaservicealerts.cache.CacheManager;
+import pl.goeuropa.goeuropaservicealerts.model.serviceAlerts.ServiceAlert;
 
-import static com.google.transit.realtime.GtfsRealtime.FeedEntity.newBuilder;
-import static pl.goeuropa.goeuropaservicealerts.model.serviceAlerts.ServiceAlertBuilderHelper.fillTranslations;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 
 @Slf4j
+@EnableScheduling
 @Service
 public class AlertServiceImpl implements AlertService {
 
+    private final CacheManager cacheManager = CacheManager.getInstance();
+
+    @Value("${alert-api.zoneId}")
+    private String ZONE_ID;
 
     @Override
-    public Builder createAlert(Cause cause, Effect effect) {
+    public void createAlert(ServiceAlert newAlert) throws JsonProcessingException {
+        cacheManager.addToAlertList(newAlert);
+        log.info("-- Added new one {}", newAlert);
+    }
 
-   FeedMessage.Builder feedMessageBuilder = FeedMessage.newBuilder();
-        // Create an Alert builder
-        Builder alertBuilder = Alert.newBuilder();
-        GtfsRealtime.FeedEntity.Builder entity = feed.addEntityBuilder();
+    @Override
+    public GtfsRealtime.FeedMessage getAlertsByAgency(String agencyId) {
+        GtfsRealtime.FeedMessage.Builder feed = GtfsRealtime.FeedMessage.newBuilder();
+        GtfsRealtime.FeedHeader.Builder header = feed.getHeaderBuilder();
+        header.setGtfsRealtimeVersion("2.0");
+        long time = LocalDateTime.now()
+                .atZone(ZoneId.of(ZONE_ID))
+                .toEpochSecond();
+        header.setTimestamp(time / 1000);
+        //TODO implementation
+        return feed.build();
+    }
 
-        entity.setId(Integer.toString(feed.getEntityCount()));
-        GtfsRealtime.Alert.Builder alert = entity.getAlertBuilder();
-
-        fillTranslations(serviceAlert.getSummaries(),
-                alert.getHeaderTextBuilder());
-        fillTranslations(serviceAlert.getDescriptions(),
-                alert.getDescriptionTextBuilder());
-        fillTranslations(serviceAlert.getUrls(),
-                alert.getUrlBuilder());
-        alertBuilder.setCause(cause).setEffect(effect);
-
-
-        // Create an instance of ActivePeriod for the time range
-        TimeRange.Builder timeRangeBuilder = TimeRange.newBuilder();
-
-        // Set start and end times for the active period
-        timeRangeBuilder.setStart(1234567890L).setEnd(1234567899L);
-        alertBuilder.addActivePeriod(timeRangeBuilder.build());
-
-        // Add the Alert to the FeedMessage
-        feedMessageBuilder.addEntity(newBuilder().setAlert(alertBuilder));
-        feedMessageBuilder.addEntity(newBuilder().setAlert(alertBuilder));
-        feedMessageBuilder.addEntity(newBuilder().setAlert(alertBuilder));
-        feedMessageBuilder.addEntity(newBuilder().setAlert(alertBuilder));
-
-        // Serialize the FeedMessage
-        byte[] serializedFeed = feedMessageBuilder.build().toByteArray();
-
-        // Now you can send the serializedFeed to the real-time data server
-        // (The specific method of sending data depends on your implementation)
-
-        // Export the serialized feed to a .pb file
-//        try (FileOutputStream file = new FileOutputStream("output.pb")) {
-//            file.write(serializedFeed);
-//            System.out.println("Serialized GTFS-realtime feed exported to output.pb");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-        return alertBuilder;
+    @Override
+    public GtfsRealtime.FeedMessage getAlerts() {
+        //TODO implementation
+        return null;
     }
 }

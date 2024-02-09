@@ -16,8 +16,11 @@
  */
 package pl.goeuropa.goeuropaservicealerts.model.serviceAlerts;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
+@Data
 public class TimeRange implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -35,27 +38,4 @@ public class TimeRange implements Serializable {
     this.to = to;
   }
 
-  /**
-   * 
-   * @return the from time, or zero if not set
-   */
-  public long getFrom() {
-    return from;
-  }
-
-  public void setFrom(long from) {
-    this.from = from;
-  }
-
-  /**
-   * 
-   * @return the to time, or zero if not set
-   */
-  public long getTo() {
-    return to;
-  }
-
-  public void setTo(long to) {
-    this.to = to;
-  }
 }
