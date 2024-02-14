@@ -1,4 +1,5 @@
 /**
+ * Copyright (C) 2011 Brian Ferris <bdferris@onebusaway.org>
  * Copyright (C) 2011 Google, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,19 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pl.goeuropa.goeuropaservicealerts.model.serviceAlerts;
+package pl.goeuropa.servicealerts.model.serviceAlerts;
 
-public enum Cause {
-  UNKNOWN_CAUSE,
-  OTHER_CAUSE,
-  TECHNICAL_PROBLEM,
-  STRIKE,
-  DEMONSTRATION,
-  ACCIDENT,
-  HOLIDAY,
-  WEATHER,
-  MAINTENANCE,
-  CONSTRUCTION,
-  POLICE_ACTIVITY,
-  MEDICAL_EMERGENCY
+import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+import java.io.Serializable;
+
+@Data
+@AllArgsConstructor
+public class NaturalLanguageString implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+
+  private String value;
+  @Pattern(regexp = ".{3}")
+  private String lang;
+
 }

@@ -2,6 +2,7 @@ server:
   port: 8888
 
 alert-api:
-  outPath: ./src/main/resources/alerts.list
-  inPath: ./src/main/resources/alerts.list
-  zoneId: "Europe/Warsaw"
+  outPath: ./app/resources/alerts.list
+  inPath: ./app/resources/alerts.list
+  zoneId: Europe/Warsaw
+  actualFilter: true

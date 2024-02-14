@@ -1,21 +1,19 @@
-package pl.goeuropa.goeuropaservicealerts.utils;
+package pl.goeuropa.servicealerts.utils;
 
 import com.google.transit.realtime.GtfsRealtime;
-import pl.goeuropa.goeuropaservicealerts.model.serviceAlerts.NaturalLanguageString;
-import pl.goeuropa.goeuropaservicealerts.model.serviceAlerts.ServiceAlert;
-import pl.goeuropa.goeuropaservicealerts.model.serviceAlerts.SituationAffects;
-import pl.goeuropa.goeuropaservicealerts.model.serviceAlerts.TimeRange;
+import pl.goeuropa.servicealerts.model.serviceAlerts.NaturalLanguageString;
+import pl.goeuropa.servicealerts.model.serviceAlerts.ServiceAlert;
+import pl.goeuropa.servicealerts.model.serviceAlerts.SituationAffects;
+import pl.goeuropa.servicealerts.model.serviceAlerts.TimeRange;
 
 import java.util.List;
 
 /**
  * convenience methods to convert from Service Alert Object to GTFS-RT.
  */
-public class ServiceAlertBuilderUtil {
+public class AlertBuilderUtil {
 
-    private static boolean REMOVE_AGENCY_ID = true;
-
-    public static void fillFeedMessage(GtfsRealtime.FeedMessage.Builder feed, List<ServiceAlert> alerts, long time) {
+    public static void fillFeedMessage(GtfsRealtime.FeedMessage.Builder feed, List<ServiceAlert> alerts) {
 
         for (ServiceAlert serviceAlert : alerts) {
 
@@ -38,11 +36,11 @@ public class ServiceAlertBuilderUtil {
             if (serviceAlert.getActiveWindows() != null) {
                 for (TimeRange range : serviceAlert.getActiveWindows()) {
                     GtfsRealtime.TimeRange.Builder timeRange = alert.addActivePeriodBuilder();
-                    if (range.getFrom() != 0)
-                        timeRange.setStart(range.getFrom() / 1000);
+                    if (range.getFrom() != null)
+                        timeRange.setStart(range.getLongFrom() / 1000);
 
-                    if (range.getTo() != 0)
-                        timeRange.setEnd(range.getTo() / 1000);
+                    if (range.getTo() != null)
+                        timeRange.setEnd(range.getLongTo() / 1000);
 
                 }
             }
@@ -50,26 +48,26 @@ public class ServiceAlertBuilderUtil {
             if (serviceAlert.getAllAffects() != null) {
                 for (SituationAffects affects : serviceAlert.getAllAffects()) {
                     GtfsRealtime.EntitySelector.Builder entitySelector = alert.addInformedEntityBuilder();
-                    if (affects.getAgencyId() != null)
-                        entitySelector.setAgencyId(affects.getAgencyId());
+                    if (serviceAlert.getAgencyId() != null)
+                        entitySelector.setAgencyId(serviceAlert.getAgencyId());
 
                     if (affects.getRouteId() != null)
-                        entitySelector.setRouteId(normalizeId(affects.getRouteId()));
+                        entitySelector.setRouteId(affects.getRouteId());
 
                     if (affects.getTripId() != null) {
                         GtfsRealtime.TripDescriptor.Builder trip = entitySelector.getTripBuilder();
-                        trip.setTripId(normalizeId(affects.getTripId()));
+                        trip.setTripId(affects.getTripId());
                         entitySelector.setTrip(trip);
                     }
                     if (affects.getStopId() != null)
-                        entitySelector.setStopId(normalizeId(affects.getStopId()));
+                        entitySelector.setStopId(affects.getStopId());
 
                 }
             }
         }
     }
 
-    public static void fillTranslations(List<NaturalLanguageString> input,
+    static void fillTranslations(List<NaturalLanguageString> input,
                                         GtfsRealtime.TranslatedString.Builder output) {
         if (input != null) {
             for (NaturalLanguageString nls : input) {
@@ -82,17 +80,7 @@ public class ServiceAlertBuilderUtil {
         }
     }
 
-    protected static String normalizeId(String id) {
-        if (REMOVE_AGENCY_ID) {
-            int index = id.indexOf('_');
-            if (index != -1) {
-                id = id.substring(index + 1);
-            }
-        }
-        return id;
-    }
-
-    private static GtfsRealtime.Alert.Cause toCause(String reason) {
+    static GtfsRealtime.Alert.Cause toCause(String reason) {
         return switch (reason) {
             case "OTHER_CAUSE" -> GtfsRealtime.Alert.Cause.OTHER_CAUSE;
             case "TECHNICAL_PROBLEM" -> GtfsRealtime.Alert.Cause.TECHNICAL_PROBLEM;
@@ -109,7 +97,7 @@ public class ServiceAlertBuilderUtil {
         };
     }
 
-    private static GtfsRealtime.Alert.Effect toEffect(String conclusion) {
+    static GtfsRealtime.Alert.Effect toEffect(String conclusion) {
         return switch (conclusion) {
             case "ADDITIONAL_SERVICE" -> GtfsRealtime.Alert.Effect.ADDITIONAL_SERVICE;
             case "DETOUR" -> GtfsRealtime.Alert.Effect.DETOUR;

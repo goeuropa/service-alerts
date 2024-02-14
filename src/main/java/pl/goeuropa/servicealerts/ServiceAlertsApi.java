@@ -1,16 +1,15 @@
-package pl.goeuropa.goeuropaservicealerts;
+package pl.goeuropa.servicealerts;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.protobuf.ProtobufHttpMessageConverter;
 
 @SpringBootApplication
-public class GoeuropaServiceAlertsApi {
+public class ServiceAlertsApi {
 
     public static void main(String[] args) {
-        SpringApplication.run(GoeuropaServiceAlertsApi.class, args);
+        SpringApplication.run(ServiceAlertsApi.class, args);
     }
 
     @Bean
