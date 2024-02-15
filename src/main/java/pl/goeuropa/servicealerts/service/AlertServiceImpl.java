@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import pl.goeuropa.servicealerts.cache.CacheManager;
-import pl.goeuropa.servicealerts.model.serviceAlerts.ServiceAlert;
+import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
 import pl.goeuropa.servicealerts.utils.AlertBuilderUtil;
 
 import java.time.LocalDateTime;
@@ -14,7 +14,6 @@ import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -24,8 +23,8 @@ public class AlertServiceImpl implements AlertService {
 
     private final CacheManager cacheManager = CacheManager.getInstance();
 
-    @Value("${alert-api.zoneId}")
-    private String timeZone;
+    @Value("${alert-api.zone-id}")
+    private String ZONE_ID;
 
     @Override
     public void createAlert(ServiceAlert newAlert) {
@@ -49,7 +48,7 @@ public class AlertServiceImpl implements AlertService {
             GtfsRealtime.FeedHeader.Builder header = feed.getHeaderBuilder();
             header.setGtfsRealtimeVersion("2.0");
             long time = LocalDateTime.now()
-                    .atZone(ZoneId.of(timeZone))
+                    .atZone(ZoneId.of(ZONE_ID))
                     .toEpochSecond();
             header.setTimestamp(time / 1000);
 
@@ -74,13 +73,12 @@ public class AlertServiceImpl implements AlertService {
             GtfsRealtime.FeedHeader.Builder header = feed.getHeaderBuilder();
             header.setGtfsRealtimeVersion("2.0");
             long time = LocalDateTime.now()
-                    .atZone(ZoneId.of(timeZone))
+                    .atZone(ZoneId.of(ZONE_ID))
                     .toEpochSecond();
             header.setTimestamp(time / 1000);
             List<ServiceAlert> sortedListOfAlerts = listOfAlerts.stream()
                     .sorted(Comparator.comparingLong(ServiceAlert::getCreationTime))
                     .collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
-
             AlertBuilderUtil.fillFeedMessage(feed, sortedListOfAlerts);
             return feed.build();
         }
@@ -137,7 +135,7 @@ public class AlertServiceImpl implements AlertService {
 
 
     @Override
-    public void clearAlertList() throws RuntimeException {
+    public void cleanAlertList() throws RuntimeException {
         cacheManager.clearServiceAlertsList();
         if (!cacheManager.getServiceAlertsList().isEmpty()) {
             log.debug("Something get wrong. The alerts still in the list.");

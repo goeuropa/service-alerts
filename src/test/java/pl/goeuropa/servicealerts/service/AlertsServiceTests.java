@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.goeuropa.servicealerts.cache.CacheManager;
-import pl.goeuropa.servicealerts.model.serviceAlerts.ServiceAlert;
+import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
 
 import java.util.Arrays;
 import java.util.List;
@@ -67,6 +67,6 @@ class AlertsServiceTests {
         //then
         assertFalse(filteredAlerts.isEmpty());
         assertEquals(2, filteredAlerts.size());
-        testService.clearAlertList();
+        testService.cleanAlertList();
     }
 }

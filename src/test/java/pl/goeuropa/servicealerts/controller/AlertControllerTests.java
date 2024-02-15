@@ -1,7 +1,10 @@
 package pl.goeuropa.servicealerts.controller;
 
+import com.google.transit.realtime.GtfsRealtime;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -9,12 +12,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import pl.goeuropa.servicealerts.model.serviceAlerts.ServiceAlert;
+import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
+import pl.goeuropa.servicealerts.model.servicealerts.TimeRange;
 import pl.goeuropa.servicealerts.service.AlertService;
 
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.nio.charset.Charset.forName;
 import static org.mockito.Mockito.when;
@@ -34,8 +39,12 @@ public class AlertControllerTests {
     @MockBean
     private AlertService mockService;
 
-
     private String baseUrl = "/api";
+
+    @BeforeEach
+    void initAlerts(){
+        when(mockService.getAlertList()).thenReturn(alertListInit());
+    }
 
     private EasyRandom getGenerator() {
         EasyRandomParameters parameters = new EasyRandomParameters()
@@ -58,7 +67,14 @@ public class AlertControllerTests {
         var alert3 = getGenerator().nextObject(ServiceAlert.class);
         alert3.setAgencyId("-77");
         LinkedList<ServiceAlert> testAlerts = new LinkedList<>();
-        Collections.addAll(testAlerts, alert1, alert2, alert3);
+        Collections.addAll(testAlerts, alert1, alert3, alert2);
+        testAlerts.stream()
+                .flatMap(alert -> alert.getActiveWindows().stream())
+                .peek(timeRange -> {
+                    timeRange.setTo("2025-12-03T10:15:30");
+                    timeRange.setFrom("2024-12-03T10:15:30");
+                })
+                .collect(Collectors.toList());
         return testAlerts;
     }
 
@@ -80,21 +96,17 @@ public class AlertControllerTests {
 
     @Test
     void getAlertsAsProtobufTest() throws Exception {
-//        LinkedList<ServiceAlert> testList = alertListInit();
-        when(mockService.getAlertList()).thenReturn(alertListInit());
-
+        when(mockService.getAlerts()).thenReturn(GtfsRealtime.FeedMessage.getDefaultInstance());
         mockMvc.perform(
                         get(baseUrl + "/alerts.pb")
                                 .contentType(MediaType.APPLICATION_PROTOBUF_VALUE)
                 )
                 .andDo(print())
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
         }
 
     @Test
     void getAlertsAsJsonTest() throws Exception {
-//        LinkedList<ServiceAlert> testList = alertListInit();
-        when(mockService.getAlertList()).thenReturn(alertListInit());
 
         mockMvc.perform(
                 get(baseUrl + "/alerts")
@@ -112,6 +124,28 @@ public class AlertControllerTests {
                 .andExpect(jsonPath("$[0].balance").doesNotExist())
                 .andExpect(jsonPath("$[0].activeWindows").isArray())
                 .andExpect(jsonPath("$[0].descriptions").isArray())
+        ;
+    }
+
+    @Test
+    void getAlertsAsJsonByAgencyTest() throws Exception {
+
+        mockMvc.perform(
+                        get(baseUrl + "/55/alerts")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$").isNotEmpty())
+//                .andExpect(jsonPath("$").isArray())
+//
+//                .andExpect(jsonPath("$[0]").isNotEmpty())
+//                .andExpect(jsonPath("$[0].id").isNotEmpty())
+//                .andExpect(jsonPath("$[0].agencyId").value("-77"))
+//                .andExpect(jsonPath("$[0].creationTime").isNumber())
+//                .andExpect(jsonPath("$[0].balance").doesNotExist())
+//                .andExpect(jsonPath("$[0].activeWindows").isArray())
+//                .andExpect(jsonPath("$[0].descriptions").isArray())
         ;
     }
 }

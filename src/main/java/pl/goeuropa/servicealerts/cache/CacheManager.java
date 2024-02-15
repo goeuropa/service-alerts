@@ -2,14 +2,12 @@ package pl.goeuropa.servicealerts.cache;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import jakarta.validation.constraints.NotNull;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import pl.goeuropa.servicealerts.model.serviceAlerts.ServiceAlert;
+import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -19,28 +17,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@EnableScheduling
 @Component
 public class CacheManager implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
      * Make this class available as a singleton
      */
-    private static CacheManager singleton = new CacheManager();
+    private static final CacheManager singleton = new CacheManager();
 
 
-    @Value("${alert-api.zoneId}")
+    @Value("${alert-api.zone-id}")
     private String ZONE_ID;
 
-    @Value("${alert-api.actualFilter}")
+    @Value("${alert-api.actual-filter}")
     private boolean ONLY_ACTUAL_ALERTS;
 
-    @Value("${alert-api.inPath}")
+    @Value("${alert-api.in-path}")
     private String INPUT_PATH;
 
-    @Value("${alert-api.outPath}")
+    @Value("${alert-api.out-path}")
     private String OUTPUT_PATH;
 
     private static List<ServiceAlert> serviceAlertList = new LinkedList<>();

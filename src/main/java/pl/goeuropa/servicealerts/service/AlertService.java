@@ -2,7 +2,7 @@ package pl.goeuropa.servicealerts.service;
 
 
 import com.google.transit.realtime.GtfsRealtime;
-import pl.goeuropa.servicealerts.model.serviceAlerts.ServiceAlert;
+import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -21,5 +21,5 @@ public interface AlertService {
 
     void deleteAlertById(String string);
 
-    void clearAlertList();
+    void cleanAlertList();
 }

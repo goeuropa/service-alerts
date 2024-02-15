@@ -1,23 +1,27 @@
-package pl.goeuropa.servicealerts.model.serviceAlerts;
+package pl.goeuropa.servicealerts.model.servicealerts;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import org.springframework.beans.factory.annotation.Value;
+import pl.goeuropa.servicealerts.cache.CacheManager;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 
 @Data
-@EqualsAndHashCode
-@ToString
 @NoArgsConstructor
 public class ServiceAlert implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
+
+    @Value("${alert-api.zone-id}")
+    private static String ZONE_ID;
 
     @NotNull
     private String id;

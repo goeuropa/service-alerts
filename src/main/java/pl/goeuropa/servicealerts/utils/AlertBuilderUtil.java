@@ -1,10 +1,10 @@
 package pl.goeuropa.servicealerts.utils;
 
 import com.google.transit.realtime.GtfsRealtime;
-import pl.goeuropa.servicealerts.model.serviceAlerts.NaturalLanguageString;
-import pl.goeuropa.servicealerts.model.serviceAlerts.ServiceAlert;
-import pl.goeuropa.servicealerts.model.serviceAlerts.SituationAffects;
-import pl.goeuropa.servicealerts.model.serviceAlerts.TimeRange;
+import pl.goeuropa.servicealerts.model.servicealerts.NaturalLanguageString;
+import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
+import pl.goeuropa.servicealerts.model.servicealerts.SituationAffects;
+import pl.goeuropa.servicealerts.model.servicealerts.TimeRange;
 
 import java.util.List;
 

@@ -14,14 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pl.goeuropa.servicealerts.model.serviceAlerts;
+package pl.goeuropa.servicealerts.model.servicealerts;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import pl.goeuropa.servicealerts.cache.CacheManager;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -30,6 +30,7 @@ import java.time.format.DateTimeFormatter;
 @Data
 public class TimeRange implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @NotBlank @NotNull
@@ -37,11 +38,12 @@ public class TimeRange implements Serializable {
     @NotBlank @NotNull
     String to;
 
+    @JsonIgnore
     public long getLongFrom () {
         return LocalDateTime.parse(this.from, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
                 .toEpochSecond(ZoneOffset.UTC);
     }
-
+    @JsonIgnore
     public long getLongTo () {
         return LocalDateTime.parse(this.to, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
                 .toEpochSecond(ZoneOffset.UTC);

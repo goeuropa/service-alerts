@@ -2,10 +2,10 @@ server:
   port: 8888
 
 alert-api:
-  outPath: ./app/resources/alerts.list
-  inPath: ./app/resources/alerts.list
-  zoneId: Europe/Warsaw
-  actualFilter: true
+  out-path: ./app/resources/alerts.list
+  in-path: ./app/resources/alerts.list
+  zone-id: "Europe/Warsaw"
+  actual-filter: true
 
 springdoc:
   api-docs:
