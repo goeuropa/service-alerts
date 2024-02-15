@@ -1,0 +1,6 @@
+version: "3.18"
+services:
+  service-alerts:
+    image: timurshyk/service-alerts-server
+    ports:
+      - "8888:8888"
