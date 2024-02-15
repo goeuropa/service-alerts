@@ -6,3 +6,9 @@ alert-api:
   inPath: ./app/resources/alerts.list
   zoneId: Europe/Warsaw
   actualFilter: true
+
+springdoc:
+  api-docs:
+    path: "/docs"
+  swagger-ui:
+    path: "/ui"
