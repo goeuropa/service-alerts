@@ -2,9 +2,12 @@ server:
   port: 8888
 
 alert-api:
+  ## Paths to save/read cache list
   out-path: ./app/resources/alerts.list
   in-path: ./app/resources/alerts.list
+  ## Time-Zone
   zone-id: "Europe/Warsaw"
+  ## Enable filter out old alerts
   actual-filter: true
 
 springdoc:

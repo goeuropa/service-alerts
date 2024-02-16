@@ -3,6 +3,7 @@ package pl.goeuropa.servicealerts.controller;
 
 import com.google.transit.realtime.GtfsRealtime;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +19,8 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@Tag(name = "Service-alerts",
+        description = "Service-alert api allow you to provide updates whenever there is disruption on the network. Delays and cancellations of individual trips should usually be communicated using Trip updates.")
 @RequestMapping("/api")
 public class AlertController {
 
@@ -35,7 +38,7 @@ public class AlertController {
         service.createAlert(alert);
     }
 
-    @RequestMapping(value = "/{agencyId}/alerts.pb", produces = MediaType.APPLICATION_PROTOBUF_VALUE)
+    @GetMapping(value = "/agency{agencyId}/alerts.pb", produces = MediaType.APPLICATION_PROTOBUF_VALUE)
     @Operation(summary = "Return a protobuf file with alerts for request agency Id")
     public ResponseEntity<StreamingResponseBody> getByAgencyAsFile(@PathVariable String agencyId) {
         try {
@@ -76,7 +79,7 @@ public class AlertController {
         }
     }
 
-    @GetMapping("/{agencyId}/alerts")
+    @GetMapping("/agency{agencyId}/alerts")
     @Operation(summary = "Return a JSON with alerts for request agency Id")
     public ResponseEntity<List<ServiceAlert>> getByAgencyIdAsJson(@PathVariable String agencyId) {
         try {
@@ -90,26 +93,30 @@ public class AlertController {
     }
 
     @PutMapping("/alert/delete")
-    @Operation(summary = "Delete all alerts from list")
-    public String deleteAllServiceAlerts(@RequestParam String alertId) {
+    @Operation(summary = "Delete alert from list by alert Id")
+    public String deleteServiceAlertById(@RequestParam String alertId) {
         try {
             service.deleteAlertById(alertId);
             log.info("Deleted alert with id : {}", alertId);
             return String.format("Deleted alert with id : %s", alertId);
         } catch (Exception ex) {
-            return ex.getMessage() + ex.getCause();
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
+                    ex.getMessage() + ex.getCause());
         }
     }
 
     @PutMapping("/alerts/clean")
     @Operation(summary = "Delete all alerts from list")
-    public String deleteAllServiceAlerts() {
-        try {
-            service.cleanAlertList();
-            log.info("Deleted all service alerts from list");
-            return "Deleted all service alerts from list";
-        } catch (Exception ex) {
-            return ex.getMessage() + ex.getCause();
-        }
+    public String deleteAllServiceAlerts(@RequestParam String allow) {
+        if (allow.equals("yes"))
+            try {
+                service.cleanAlertList();
+                log.info("Deleted all service alerts from list");
+                return "Deleted all service alerts from list";
+            } catch (Exception ex) {
+                return ex.getMessage() + ex.getCause();
+            }
+        throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
+                "Please confirm the cache cleanup by responding with the word \"yes\" in parameters.");
     }
 }
