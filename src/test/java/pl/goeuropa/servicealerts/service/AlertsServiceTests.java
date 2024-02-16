@@ -25,7 +25,7 @@ class AlertsServiceTests {
     private final CacheManager inst = CacheManager.getInstance();
 
     private EasyRandom getGenerator() {
-       EasyRandomParameters parameters = new EasyRandomParameters()
+        EasyRandomParameters parameters = new EasyRandomParameters()
                 .seed(2)
                 .objectPoolSize(2)
                 .randomizationDepth(2)
@@ -59,7 +59,8 @@ class AlertsServiceTests {
         assertEquals(beforeCreateCount, inst.getServiceAlertsList().size());
     }
 
-    @Test @Disabled
+    @Test
+    @Disabled
     void getAlertsByAgencyId() {
 
         inst.getServiceAlertsList().addAll(alertListInit());

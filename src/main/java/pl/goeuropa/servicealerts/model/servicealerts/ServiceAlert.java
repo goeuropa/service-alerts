@@ -8,10 +8,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZoneOffset;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
-import static java.time.LocalDateTime.*;
+import static java.time.LocalDateTime.now;
 
 @Data
 public class ServiceAlert implements Serializable {
@@ -19,7 +18,7 @@ public class ServiceAlert implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private String id = uuid.toString().substring(0,5);
+    private String id = uuid.toString().substring(0, 5);
     @NotNull
     private String agencyId;
     @JsonIgnore
