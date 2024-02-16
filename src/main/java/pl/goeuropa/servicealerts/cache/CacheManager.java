@@ -29,7 +29,7 @@ public class CacheManager implements Serializable {
     private static final CacheManager singleton = new CacheManager();
 
 
-    @Value("${alert-api.zone-id}")
+    @Value("${alert-api.zone}")
     private String ZONE_ID;
 
     @Value("${alert-api.actual-filter}")
@@ -59,9 +59,6 @@ public class CacheManager implements Serializable {
     private CacheManager() {
     }
 
-    public String getZone () {
-        return ZONE_ID;
-    }
 
     /**
      * Add the alert to list.
@@ -94,7 +91,7 @@ public class CacheManager implements Serializable {
                     serviceAlertList = tempList.stream()
                             .filter(alert -> alert.getActiveWindows()
                                     .stream()
-                                    .anyMatch(element -> element.getLongTo() > dateTimeNow))
+                                    .anyMatch(element -> element.getLongTo(ZONE_ID) > dateTimeNow))
                             .collect(Collectors.toList());
                 }
                 else serviceAlertList = tempList;

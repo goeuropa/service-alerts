@@ -82,7 +82,7 @@ public class AlertControllerTests {
     void postNewAlertTest() throws Exception {
         mockMvc.perform(
                 post(baseUrl + "/create")
-                        .content("{\"id\":\"-11\",\"agencyId\":\"44\",\"creationTime\":\"null\",\"activeWindows\":[{\"from\":\"2011-12-03T10:15:30\",\"to\":\"2011-12-03T10:15:30\"},"+
+                        .content("{\"id\":\"-11\",\"agencyId\":\"44\",\"activeWindows\":[{\"from\":\"2011-12-03T10:15:30\",\"to\":\"2011-12-03T10:15:30\"},"+
                                 "{\"from\":\"2011-12-03T10:15:30\",\"to\":\"2011-12-03T10:15:30\"}],\"cause\":\"OTHER_CAUSE\",\"effect\":\"STOP_MOVED\",\"summaries\":"+
                                 "[{\"value\":\"someText\",\"lang\":\"pl\"},{\"value\":\"ELxkg\",\"lang\":\"en\"}],\"urls\":[{\"value\":\"http\",\"lang\":\"en\"},"+
                                 "{\"value\":\"http\",\"lang\":\"en\"}],\"allAffects\":[{\"routeId\":\"HFLDl\",\"tripId\":\"tDRqD\",\"stopId\":\"ejdlV\","+
@@ -120,8 +120,8 @@ public class AlertControllerTests {
                 .andExpect(jsonPath("$[0]").isNotEmpty())
                 .andExpect(jsonPath("$[0].id").isNotEmpty())
                 .andExpect(jsonPath("$[0].agencyId").value("-77"))
-                .andExpect(jsonPath("$[0].creationTime").isNumber())
-                .andExpect(jsonPath("$[0].balance").doesNotExist())
+                .andExpect(jsonPath("$[0].creationTime").doesNotExist())
+                .andExpect(jsonPath("$[0].user").doesNotExist())
                 .andExpect(jsonPath("$[0].activeWindows").isArray())
                 .andExpect(jsonPath("$[0].descriptions").isArray())
         ;
@@ -131,13 +131,12 @@ public class AlertControllerTests {
     void getAlertsAsJsonByAgencyTest() throws Exception {
 
         mockMvc.perform(
-                        get(baseUrl + "/55/alerts")
+                        get(baseUrl + "/agency55/alerts")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-//                .andExpect(jsonPath("$").isNotEmpty())
-//                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isArray())
 //
 //                .andExpect(jsonPath("$[0]").isNotEmpty())
 //                .andExpect(jsonPath("$[0].id").isNotEmpty())

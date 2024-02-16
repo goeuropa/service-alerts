@@ -61,10 +61,10 @@ class AlertsServiceTests {
 
     @Test @Disabled
     void getAlertsByAgencyId() {
-        //when
+
         inst.getServiceAlertsList().addAll(alertListInit());
         List<ServiceAlert> filteredAlerts = testService.getAlertListByAgency("-77");
-        //then
+
         assertFalse(filteredAlerts.isEmpty());
         assertEquals(2, filteredAlerts.size());
         testService.cleanAlertList();

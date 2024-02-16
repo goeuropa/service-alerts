@@ -23,7 +23,8 @@ public class AlertServiceImpl implements AlertService {
 
     private final CacheManager cacheManager = CacheManager.getInstance();
 
-    @Value("${alert-api.zone-id}")
+
+    @Value("${alert-api.zone}")
     private String ZONE_ID;
 
     @Override
@@ -56,7 +57,7 @@ public class AlertServiceImpl implements AlertService {
             if (filteredListOfAlerts.isEmpty())
                 throw new IllegalStateException(String.format("List of alerts is empty for agencyId :%s", agencyId));
 
-            AlertBuilderUtil.fillFeedMessage(feed, filteredListOfAlerts);
+            AlertBuilderUtil.fillFeedMessage(feed, filteredListOfAlerts, ZONE_ID);
             log.info("-- Got {} service-alerts for agencyId {} ", filteredListOfAlerts.size(), agencyId);
             return feed.build();
         }
@@ -79,7 +80,7 @@ public class AlertServiceImpl implements AlertService {
             List<ServiceAlert> sortedListOfAlerts = listOfAlerts.stream()
                     .sorted(Comparator.comparingLong(ServiceAlert::getCreationTime))
                     .collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
-            AlertBuilderUtil.fillFeedMessage(feed, sortedListOfAlerts);
+            AlertBuilderUtil.fillFeedMessage(feed, sortedListOfAlerts, ZONE_ID);
             return feed.build();
         }
         throw new IllegalStateException("List of alerts is empty");

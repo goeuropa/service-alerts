@@ -13,7 +13,8 @@ import java.util.List;
  */
 public class AlertBuilderUtil {
 
-    public static void fillFeedMessage(GtfsRealtime.FeedMessage.Builder feed, List<ServiceAlert> alerts) {
+
+    public static void fillFeedMessage(GtfsRealtime.FeedMessage.Builder feed, List<ServiceAlert> alerts, String zoneId) {
 
         for (ServiceAlert serviceAlert : alerts) {
 
@@ -37,10 +38,10 @@ public class AlertBuilderUtil {
                 for (TimeRange range : serviceAlert.getActiveWindows()) {
                     GtfsRealtime.TimeRange.Builder timeRange = alert.addActivePeriodBuilder();
                     if (range.getFrom() != null)
-                        timeRange.setStart(range.getLongFrom() / 1000);
+                        timeRange.setStart(range.getLongFrom(zoneId) / 1000);
 
                     if (range.getTo() != null)
-                        timeRange.setEnd(range.getLongTo() / 1000);
+                        timeRange.setEnd(range.getLongTo(zoneId) / 1000);
 
                 }
             }
@@ -68,7 +69,7 @@ public class AlertBuilderUtil {
     }
 
     static void fillTranslations(List<NaturalLanguageString> input,
-                                        GtfsRealtime.TranslatedString.Builder output) {
+                                 GtfsRealtime.TranslatedString.Builder output) {
         if (input != null) {
             for (NaturalLanguageString nls : input) {
                 GtfsRealtime.TranslatedString.Translation.Builder translation = output.addTranslationBuilder();

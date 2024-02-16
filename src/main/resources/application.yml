@@ -6,7 +6,7 @@ alert-api:
   out-path: ./app/resources/alerts.list
   in-path: ./app/resources/alerts.list
   ## Time-Zone
-  zone-id: "Europe/Warsaw"
+  zone: "Europe/Warsaw"
   ## Enable filter out old alerts
   actual-filter: true
 

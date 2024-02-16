@@ -1,34 +1,29 @@
 package pl.goeuropa.servicealerts.model.servicealerts;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import pl.goeuropa.servicealerts.cache.CacheManager;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+
+import static java.time.LocalDateTime.*;
 
 @Data
-@NoArgsConstructor
 public class ServiceAlert implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Value("${alert-api.zone-id}")
-    private static String ZONE_ID;
-
-    @NotNull
-    private String id;
+    private String id = uuid.toString().substring(0,5);
     @NotNull
     private String agencyId;
-
-    private long creationTime = LocalDateTime.now()
+    @JsonIgnore
+    private long creationTime = now()
             .atZone(ZoneOffset.UTC)
             .toEpochSecond();
     @NotNull
@@ -45,5 +40,8 @@ public class ServiceAlert implements Serializable {
     private List<SituationAffects> allAffects;
     @NotNull
     private List<NaturalLanguageString> descriptions;
+
+    @JsonIgnore
+    private static UUID uuid = UUID.randomUUID();
 
 }

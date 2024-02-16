@@ -24,6 +24,7 @@ import lombok.Data;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
@@ -38,14 +39,16 @@ public class TimeRange implements Serializable {
     @NotBlank @NotNull
     String to;
 
+
     @JsonIgnore
-    public long getLongFrom () {
+    public long getLongFrom(String zoneId) {
         return LocalDateTime.parse(this.from, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-                .toEpochSecond(ZoneOffset.UTC);
+                .atZone(ZoneId.of(zoneId)).toEpochSecond();
     }
+
     @JsonIgnore
-    public long getLongTo () {
+    public long getLongTo(String zoneId) {
         return LocalDateTime.parse(this.to, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-                .toEpochSecond(ZoneOffset.UTC);
+                .atZone(ZoneId.of(zoneId)).toEpochSecond();
     }
 }
