@@ -92,7 +92,7 @@ public class AlertController {
         }
     }
 
-    @PutMapping("/alert/delete")
+    @DeleteMapping("/alert/delete")
     @Operation(summary = "Delete alert from list by alert Id")
     public String deleteServiceAlertById(@RequestParam String alertId) {
         try {
@@ -105,7 +105,7 @@ public class AlertController {
         }
     }
 
-    @PutMapping("/alerts/clean")
+    @DeleteMapping("/alerts/clean")
     @Operation(summary = "Delete all alerts from list")
     public String deleteAllServiceAlerts(@RequestParam String allow) {
         if (allow.equals("yes"))
