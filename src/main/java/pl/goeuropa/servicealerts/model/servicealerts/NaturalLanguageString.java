@@ -16,7 +16,7 @@
  */
 package pl.goeuropa.servicealerts.model.servicealerts;
 
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -31,7 +31,7 @@ public class NaturalLanguageString implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String value;
-    @Pattern(regexp = ".{3}")
+    @Size (min = 2, max = 3)
     private String lang;
 
 }
