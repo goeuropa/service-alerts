@@ -1,5 +1,10 @@
 server:
   port: 8888
+
+logging:
+  file:
+    name: src/main/resources/logback.txt
+
 management:
   endpoints:
     web:
