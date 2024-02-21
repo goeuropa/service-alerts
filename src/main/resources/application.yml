@@ -1,5 +1,16 @@
 server:
   port: 8888
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    endpoint:
+      shutdown:
+        enabled: true
+  endpoint:
+    shutdown:
+      enabled: true
 
 alert-api:
   ## Paths to save/read cache list
