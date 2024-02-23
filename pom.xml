@@ -30,12 +30,6 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
@@ -96,21 +90,6 @@
                     <to>
                         <image>timurshyk/service-alerts-server</image>
                     </to>
-                    <!--                    <to>-->
-                    <!--                        <image>${env.CONTAINER_REPO}</image>-->
-                    <!--                        <auth>-->
-                    <!--                            <username>${env.CONTAINER_REGISTRY_USER}</username>-->
-                    <!--                            <password>${env.CONTAINER_REGISTRY_PASSWORD}</password>-->
-                    <!--                        </auth>-->
-                    <!--                    </to>-->
-                    <extraDirectories>
-                        <permissions>
-                            <permission>
-                                <file>/src/main/resources/alerts.list</file>
-                                <mode>755</mode>
-                            </permission>
-                        </permissions>
-                    </extraDirectories>
                 </configuration>
             </plugin>
 
