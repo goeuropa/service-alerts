@@ -131,9 +131,22 @@ public class AlertServiceImpl implements AlertService {
             log.debug("Something get wrong. The alert still is.");
             throw new IllegalStateException("Something get wrong. The alert still is. Try again");
         }
-        log.info("-- Element with id: {} - successfully deleted", id);
+        log.info("-- Alert with id: {} - successfully deleted", id);
     }
 
+    @Override
+    public void deleteAlertsByAgency(String id) throws RuntimeException {
+        cacheManager.getServiceAlertsList()
+                .removeIf(alert -> alert.getAgencyId()
+                        .equals(id));
+        if (cacheManager.getServiceAlertsList()
+                .stream()
+                .anyMatch(alert -> alert.getAgencyId().equals(id))) {
+            log.debug("Something get wrong. Alerts still are.");
+            throw new IllegalStateException("Something get wrong. Alerts still are. Try again");
+        }
+        log.info("-- Alerts for agencyId: {} - successfully deleted", id);
+    }
 
     @Override
     public void cleanAlertList() throws RuntimeException {

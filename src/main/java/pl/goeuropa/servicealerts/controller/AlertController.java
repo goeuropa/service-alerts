@@ -67,7 +67,7 @@ public class AlertController {
         service.createAlert(alert);
     }
 
-    @GetMapping(value = "/agency{agencyId}/alerts.pb", produces = MediaType.APPLICATION_PROTOBUF_VALUE)
+    @GetMapping(value = "/agency/{agencyId}/alerts.pb", produces = MediaType.APPLICATION_PROTOBUF_VALUE)
     @Operation(summary = "Return a protobuf file with alerts for request agency Id")
     public ResponseEntity<StreamingResponseBody> getByAgencyAsFile(@PathVariable String agencyId) {
         try {
@@ -108,7 +108,7 @@ public class AlertController {
         }
     }
 
-    @GetMapping("/agency{agencyId}/alerts")
+    @GetMapping("/agency/{agencyId}/alerts")
     @Operation(summary = "Return a JSON with alerts for request agency Id")
     public ResponseEntity<List<ServiceAlert>> getByAgencyIdAsJson(@PathVariable String agencyId) {
         try {
@@ -132,6 +132,21 @@ public class AlertController {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
                     ex.getMessage() + ex.getCause());
         }
+    }
+
+    @DeleteMapping("/alerts/agency/{agencyId}/clean")
+    @Operation(summary = "Delete all alerts for request agency Id")
+    public String deleteAllServiceAlertsByAgencyId(@PathVariable String agencyId, @RequestParam String allow) {
+        if (allow.equals("yes"))
+            try {
+                service.deleteAlertsByAgency(agencyId);
+                log.info("Deleted all service alerts for agency : {}", agencyId);
+                return String.format("Deleted all service alerts for agency : %s", agencyId);
+            } catch (Exception ex) {
+                return ex.getMessage() + ex.getCause();
+            }
+        throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
+                "Please confirm the cache cleanup by responding with the word \"yes\" in parameters.");
     }
 
     @DeleteMapping("/alerts/clean")
