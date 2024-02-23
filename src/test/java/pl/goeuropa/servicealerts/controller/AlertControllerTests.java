@@ -129,7 +129,7 @@ public class AlertControllerTests {
     void getAlertsAsJsonByAgencyTest() throws Exception {
 
         mockMvc.perform(
-                        get(baseUrl + "/agency55/alerts")
+                        get(baseUrl + "/agency/55/alerts")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
