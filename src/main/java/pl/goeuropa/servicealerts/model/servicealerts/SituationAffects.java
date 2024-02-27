@@ -33,5 +33,5 @@ public final class SituationAffects implements Serializable {
 
     private String stopId;
 
-    private String routType;
+    private String routeType;
 }

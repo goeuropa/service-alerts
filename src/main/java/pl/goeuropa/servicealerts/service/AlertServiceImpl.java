@@ -97,10 +97,9 @@ public class AlertServiceImpl implements AlertService {
                     .filter(alert -> alert.getAgencyId().equals(agencyId)
                     )
                     .collect(Collectors.toList());
-            if (filteredListOfAlerts.isEmpty())
-                throw new IllegalStateException(String.format("List of alerts is empty for agencyId :%s", agencyId));
-
-            log.info("-- Got {} service-alerts for agencyId {} ", filteredListOfAlerts.size(), agencyId);
+            if (filteredListOfAlerts.isEmpty()) {
+                log.info("-- List of alerts is empty for agencyId {} ", agencyId);
+            }
             return filteredListOfAlerts;
         }
         throw new IllegalStateException("List of alerts is empty");

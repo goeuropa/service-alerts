@@ -22,5 +22,6 @@ public interface AlertService {
     void deleteAlertById(String id);
 
     void deleteAlertsByAgency(String id);
+
     void cleanAlertList();
 }
