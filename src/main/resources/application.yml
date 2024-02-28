@@ -3,7 +3,7 @@ server:
 
 logging:
   file:
-    name: src/main/resources/logback.txt
+    name: logs/logback.txt
 
 management:
   endpoints:

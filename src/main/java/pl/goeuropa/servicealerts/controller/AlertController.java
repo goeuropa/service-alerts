@@ -18,6 +18,7 @@ import java.util.List;
 
 
 @Slf4j
+@CrossOrigin(origins = "https://alerts.goeuropa.net", maxAge = 3600)
 @RestController
 @Tag(name = "Service-alerts",
         description = "Service-alert api allow you to provide updates whenever there is disruption on the network. Delays and cancellations of individual trips should usually be communicated using Trip updates.")
