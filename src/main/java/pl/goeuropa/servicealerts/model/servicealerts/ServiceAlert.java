@@ -18,7 +18,7 @@ public class ServiceAlert implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-    @JsonIgnore
+
     private String id;
     @NotNull
     private String agencyId;
