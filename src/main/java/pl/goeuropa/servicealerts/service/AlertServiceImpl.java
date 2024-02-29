@@ -16,6 +16,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.time.Instant.now;
+
 @Slf4j
 @EnableScheduling
 @Service
@@ -29,6 +31,9 @@ public class AlertServiceImpl implements AlertService {
 
     @Override
     public void createAlert(ServiceAlert newAlert) {
+        long time = getDateTimeNow();
+        newAlert.setId(String.valueOf(time));
+        newAlert.setCreationTime(time);
         cacheManager.addToAlertList(newAlert);
         log.info("-- Added new one {}", newAlert);
     }
@@ -48,10 +53,7 @@ public class AlertServiceImpl implements AlertService {
             GtfsRealtime.FeedMessage.Builder feed = GtfsRealtime.FeedMessage.newBuilder();
             GtfsRealtime.FeedHeader.Builder header = feed.getHeaderBuilder();
             header.setGtfsRealtimeVersion("2.0");
-            long time = LocalDateTime.now()
-                    .atZone(ZoneId.of(ZONE_ID))
-                    .toEpochSecond();
-            header.setTimestamp(time / 1000);
+            header.setTimestamp(getDateTimeNow() / 1000);
 
 
             if (filteredListOfAlerts.isEmpty())
@@ -73,10 +75,7 @@ public class AlertServiceImpl implements AlertService {
             GtfsRealtime.FeedMessage.Builder feed = GtfsRealtime.FeedMessage.newBuilder();
             GtfsRealtime.FeedHeader.Builder header = feed.getHeaderBuilder();
             header.setGtfsRealtimeVersion("2.0");
-            long time = LocalDateTime.now()
-                    .atZone(ZoneId.of(ZONE_ID))
-                    .toEpochSecond();
-            header.setTimestamp(time / 1000);
+            header.setTimestamp(getDateTimeNow() / 1000);
             List<ServiceAlert> sortedListOfAlerts = listOfAlerts.stream()
                     .sorted(Comparator.comparingLong(ServiceAlert::getCreationTime))
                     .collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
@@ -112,10 +111,9 @@ public class AlertServiceImpl implements AlertService {
             throw new IllegalStateException("List of alerts is empty");
 
         log.info("-- Got sorted by creation time : {} service-alerts ", cacheManager.getServiceAlertsList().size());
-        LinkedList<ServiceAlert> sortedListOfAlerts = cacheManager.getServiceAlertsList().stream()
+        return cacheManager.getServiceAlertsList().stream()
                 .sorted(Comparator.comparingLong(ServiceAlert::getCreationTime))
                 .collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
-        return sortedListOfAlerts;
     }
 
 
@@ -155,5 +153,11 @@ public class AlertServiceImpl implements AlertService {
             throw new IllegalStateException("Something get wrong. Please, try again");
         }
         log.info("Cache list of service-alerts successful cleaned");
+    }
+
+    private long getDateTimeNow () {
+        return now()
+                .atZone(ZoneId.of(ZONE_ID))
+                .toEpochSecond();
     }
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,14 +18,12 @@ public class ServiceAlert implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-
-    private String id = uuid.toString().substring(0, 5);
+    @JsonIgnore
+    private String id;
     @NotNull
     private String agencyId;
     @JsonIgnore
-    private long creationTime = now()
-            .atZone(ZoneOffset.UTC)
-            .toEpochSecond();
+    private long creationTime;
     @NotNull
     private List<TimeRange> activeWindows;
     @NotNull
@@ -39,8 +38,4 @@ public class ServiceAlert implements Serializable {
     private List<SituationAffects> allAffects;
     @NotNull
     private List<NaturalLanguageString> descriptions;
-
-    @JsonIgnore
-    private static UUID uuid = UUID.randomUUID();
-
 }
