@@ -32,7 +32,7 @@ public class AlertServiceImpl implements AlertService {
     @Override
     public void createAlert(ServiceAlert newAlert) {
         long time = getDateTimeNow();
-        newAlert.setId(String.valueOf(time));
+        newAlert.setId(String.valueOf(time * 1000));
         newAlert.setCreationTime(time);
         cacheManager.addToAlertList(newAlert);
         log.info("-- Added new one {}", newAlert);
