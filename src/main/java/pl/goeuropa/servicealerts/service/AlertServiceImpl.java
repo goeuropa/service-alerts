@@ -57,7 +57,7 @@ public class AlertServiceImpl implements AlertService {
 
 
             if (filteredListOfAlerts.isEmpty())
-                throw new IllegalStateException(String.format("List of alerts is empty for agencyId :%s", agencyId));
+                throw new IllegalStateException(String.format("List of alerts is empty for agencyId: %s", agencyId));
 
             AlertBuilderUtil.fillFeedMessage(feed, filteredListOfAlerts, ZONE_ID);
             log.info("-- Got {} service-alerts for agencyId {} ", filteredListOfAlerts.size(), agencyId);
@@ -114,6 +114,20 @@ public class AlertServiceImpl implements AlertService {
         return cacheManager.getServiceAlertsList().stream()
                 .sorted(Comparator.comparingLong(ServiceAlert::getCreationTime))
                 .collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
+    }
+
+    @Override
+    public void editAlert(ServiceAlert updatedAlert) throws RuntimeException {
+        cacheManager.getServiceAlertsList()
+                .removeIf(alert -> alert.getId()
+                        .equals(updatedAlert.getId()));
+        cacheManager.getServiceAlertsList().add(updatedAlert);
+        if (cacheManager.getServiceAlertsList().contains(updatedAlert)){
+        log.info("-- Alert with id : {} - successfully updated", updatedAlert.getId());
+        } else {
+            log.error("-- Alert with id : {} - does not exist", updatedAlert.getId());
+            throw new IllegalStateException(String.format("Alert with id : %s - does not exist", updatedAlert.getId()));
+        }
     }
 
 

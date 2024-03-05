@@ -9,12 +9,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import pl.goeuropa.servicealerts.cache.CacheManager;
 import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.nio.charset.Charset.forName;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class AlertsServiceTests {
@@ -40,10 +42,13 @@ class AlertsServiceTests {
     private List<ServiceAlert> alertListInit() {
         var alert1 = getGenerator().nextObject(ServiceAlert.class);
         alert1.setAgencyId("-77");
+        alert1.setId("-1");
         var alert2 = getGenerator().nextObject(ServiceAlert.class);
-        alert2.setAgencyId("-11");
+        alert2.setAgencyId("-17");
+        alert2.setId("-11");
         var alert3 = getGenerator().nextObject(ServiceAlert.class);
         alert3.setAgencyId("-77");
+        alert3.setId("-111");
         return Arrays.asList(alert1, alert2, alert3);
     }
 
@@ -54,20 +59,48 @@ class AlertsServiceTests {
 
         testService.createAlert(test);
         assertEquals(beforeCreateCount + 1, testService.getAlertList().size());
-
+        // Rollback
         testService.deleteAlertById(test.getId());
         assertEquals(beforeCreateCount, inst.getServiceAlertsList().size());
     }
 
     @Test
-    @Disabled
     void getAlertsByAgencyId() {
 
         inst.getServiceAlertsList().addAll(alertListInit());
-        List<ServiceAlert> filteredAlerts = testService.getAlertListByAgency("-77");
+        Set<String> agencyIds = alertListInit().stream()
+                .map(ServiceAlert::getAgencyId)
+                .collect(Collectors.toSet());
 
+        List<ServiceAlert> filteredAlerts = testService.getAlertListByAgency("-77");
         assertFalse(filteredAlerts.isEmpty());
         assertEquals(2, filteredAlerts.size());
-        testService.cleanAlertList();
+
+        // Rollback
+        agencyIds.forEach(id -> testService.deleteAlertsByAgency(id));
+        assertThrows(IllegalStateException.class, () -> testService.getAlertListByAgency("-77"));
+    }
+
+    @Test
+    void updateAlertTest(){
+        inst.getServiceAlertsList().addAll(alertListInit());
+        Set<String> listIds = alertListInit().stream()
+                .map(ServiceAlert::getId)
+                .collect(Collectors.toSet());
+
+        for (String id : listIds) {
+            var testToUpdate = new ServiceAlert();
+            testToUpdate.setId(id);
+            testService.editAlert(testToUpdate);
+        }
+        assertNull(testService.getAlertList().getFirst().getAgencyId());
+        assertNull(testService.getAlertList().getLast().getAgencyId());
+        assertTrue(listIds.containsAll(testService.getAlertList().stream()
+                .map(ServiceAlert::getId)
+                .toList()));
+
+        // Rollback
+        listIds.forEach(id -> testService.deleteAlertById(id));
+        assertThrows(IllegalStateException.class, () -> testService.getAlertListByAgency("-17"));
     }
 }

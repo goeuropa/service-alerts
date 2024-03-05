@@ -19,6 +19,8 @@ public interface AlertService {
 
     LinkedList<ServiceAlert> getAlertList();
 
+    void editAlert(ServiceAlert newAlert);
+
     void deleteAlertById(String id);
 
     void deleteAlertsByAgency(String id);

@@ -121,6 +121,19 @@ public class AlertController {
         }
     }
 
+    @PutMapping("/alert/edit ")
+    @Operation(summary = "Edit alert")
+    public String editServiceAlert(@RequestBody ServiceAlert alertToUpdate) {
+        try {
+            service.editAlert(alertToUpdate);
+            log.info("Edited alert with id : {}", alertToUpdate.getId());
+            return String.format("Edited alert with id : %s", alertToUpdate.getId());
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT,
+                    ex.getMessage() + ex.getCause());
+        }
+    }
+
     @DeleteMapping("/alert/delete")
     @Operation(summary = "Delete alert from list by alert Id")
     public String deleteServiceAlertById(@RequestParam String alertId) {
