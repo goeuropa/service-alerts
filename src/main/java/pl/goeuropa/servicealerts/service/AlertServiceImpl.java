@@ -117,7 +117,8 @@ public class AlertServiceImpl implements AlertService {
     }
 
     @Override
-    public void editAlert(ServiceAlert updatedAlert) throws RuntimeException {
+    public void editAlert(String alertId, ServiceAlert updatedAlert) throws RuntimeException {
+        if(updatedAlert.getId().equals(alertId))
         cacheManager.getServiceAlertsList()
                 .removeIf(alert -> alert.getId()
                         .equals(updatedAlert.getId()));

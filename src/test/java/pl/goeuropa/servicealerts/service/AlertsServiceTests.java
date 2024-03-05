@@ -91,7 +91,7 @@ class AlertsServiceTests {
         for (String id : listIds) {
             var testToUpdate = new ServiceAlert();
             testToUpdate.setId(id);
-            testService.editAlert(testToUpdate);
+            testService.editAlert(id, testToUpdate);
         }
         assertNull(testService.getAlertList().getFirst().getAgencyId());
         assertNull(testService.getAlertList().getLast().getAgencyId());

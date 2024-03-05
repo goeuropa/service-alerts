@@ -123,9 +123,9 @@ public class AlertController {
 
     @PutMapping("/alert/edit ")
     @Operation(summary = "Edit alert")
-    public String editServiceAlert(@RequestBody ServiceAlert alertToUpdate) {
+    public String editServiceAlert(@RequestParam String alertId, @RequestBody ServiceAlert alertToUpdate) {
         try {
-            service.editAlert(alertToUpdate);
+            service.editAlert(alertId ,alertToUpdate);
             log.info("Edited alert with id : {}", alertToUpdate.getId());
             return String.format("Edited alert with id : %s", alertToUpdate.getId());
         } catch (Exception ex) {

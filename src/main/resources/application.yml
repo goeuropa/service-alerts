@@ -15,7 +15,7 @@ management:
         enabled: true
   endpoint:
     shutdown:
-      enabled: true
+      enabled: false
 
 alert-api:
   ## Paths to save/read cache list
