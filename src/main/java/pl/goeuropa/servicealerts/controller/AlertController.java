@@ -121,7 +121,7 @@ public class AlertController {
         }
     }
 
-    @PutMapping("/alert/edit ")
+    @PutMapping("/alert/edit")
     @Operation(summary = "Edit alert")
     public String editServiceAlert(@RequestParam String alertId, @RequestBody ServiceAlert alertToUpdate) {
         try {
