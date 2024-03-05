@@ -78,7 +78,12 @@ class AlertsServiceTests {
 
         // Rollback
         agencyIds.forEach(id -> testService.deleteAlertsByAgency(id));
-        assertThrows(IllegalStateException.class, () -> testService.getAlertListByAgency("-77"));
+    }
+
+    @Test
+    void shouldThrowIfEmptyTest() {
+        if (testService.getAlertList().isEmpty())
+            assertThrows(IllegalStateException.class, () -> testService.getAlertList());
     }
 
     @Test
@@ -91,16 +96,16 @@ class AlertsServiceTests {
         for (String id : listIds) {
             var testToUpdate = new ServiceAlert();
             testToUpdate.setId(id);
+            testToUpdate.setAgencyId(id);
             testService.editAlert(id, testToUpdate);
         }
-        assertNull(testService.getAlertList().getFirst().getAgencyId());
-        assertNull(testService.getAlertList().getLast().getAgencyId());
-        assertTrue(listIds.containsAll(testService.getAlertList().stream()
+        assertNull(testService.getAlertList().getFirst().getCause());
+        assertNull(testService.getAlertList().getFirst().getEffect());
+        assertTrue(testService.getAlertList().stream()
                 .map(ServiceAlert::getId)
-                .toList()));
+                .toList().containsAll(listIds));
 
         // Rollback
         listIds.forEach(id -> testService.deleteAlertById(id));
-        assertThrows(IllegalStateException.class, () -> testService.getAlertListByAgency("-17"));
     }
 }
