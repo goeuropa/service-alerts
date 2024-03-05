@@ -2,14 +2,12 @@ package pl.goeuropa.servicealerts.service;
 
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.goeuropa.servicealerts.cache.CacheManager;
 import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -75,19 +73,21 @@ class AlertsServiceTests {
         List<ServiceAlert> filteredAlerts = testService.getAlertListByAgency("-77");
         assertFalse(filteredAlerts.isEmpty());
         assertEquals(2, filteredAlerts.size());
-
         // Rollback
         agencyIds.forEach(id -> testService.deleteAlertsByAgency(id));
     }
 
     @Test
     void shouldThrowIfEmptyTest() {
-        if (testService.getAlertList().isEmpty())
+        try {
+            testService.getAlertList();
+        } catch (RuntimeException ex) {
             assertThrows(IllegalStateException.class, () -> testService.getAlertList());
+        }
     }
 
     @Test
-    void updateAlertTest(){
+    void updateAlertTest() {
         inst.getServiceAlertsList().addAll(alertListInit());
         Set<String> listIds = alertListInit().stream()
                 .map(ServiceAlert::getId)

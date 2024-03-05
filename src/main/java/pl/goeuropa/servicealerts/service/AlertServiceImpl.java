@@ -14,6 +14,7 @@ import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.time.Instant.now;
@@ -118,11 +119,15 @@ public class AlertServiceImpl implements AlertService {
 
     @Override
     public void editAlert(String alertId, ServiceAlert updatedAlert) throws RuntimeException {
-        if(updatedAlert.getId().equals(alertId)) {
-        cacheManager.getServiceAlertsList()
-                .removeIf(alert -> alert.getId()
-                        .equals(updatedAlert.getId()));
-        cacheManager.getServiceAlertsList().add(updatedAlert);
+        Optional<ServiceAlert> existingAlert = cacheManager.getServiceAlertsList()
+                .stream()
+                .filter(alert -> alert.getId().equals(alertId))
+                .findFirst();
+        if (existingAlert.isPresent() && updatedAlert.getId().equals(alertId)) {
+            int index = cacheManager.getServiceAlertsList().indexOf(existingAlert.get());
+            if (index != -1) {
+                cacheManager.getServiceAlertsList().set(index, updatedAlert);
+            }
         if (cacheManager.getServiceAlertsList().contains(updatedAlert)) {
         log.info("-- Alert with id : {} - successfully updated", updatedAlert.getId());
         } else {
