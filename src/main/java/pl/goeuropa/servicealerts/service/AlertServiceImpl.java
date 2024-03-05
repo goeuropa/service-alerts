@@ -118,14 +118,17 @@ public class AlertServiceImpl implements AlertService {
 
     @Override
     public void editAlert(String alertId, ServiceAlert updatedAlert) throws RuntimeException {
-        if(updatedAlert.getId().equals(alertId))
+        if(updatedAlert.getId().equals(alertId)) {
         cacheManager.getServiceAlertsList()
                 .removeIf(alert -> alert.getId()
                         .equals(updatedAlert.getId()));
         cacheManager.getServiceAlertsList().add(updatedAlert);
-        if (cacheManager.getServiceAlertsList().contains(updatedAlert)){
+        if (cacheManager.getServiceAlertsList().contains(updatedAlert)) {
         log.info("-- Alert with id : {} - successfully updated", updatedAlert.getId());
         } else {
+            log.error("-- Alert with id : {} - does not exist", updatedAlert.getId());
+            throw new IllegalStateException(String.format("Alert with id : %s - does not exist", updatedAlert.getId()));
+        }} else {
             log.error("-- Alert with id : {} - does not exist", updatedAlert.getId());
             throw new IllegalStateException(String.format("Alert with id : %s - does not exist", updatedAlert.getId()));
         }

@@ -15,7 +15,7 @@ management:
         enabled: true
   endpoint:
     shutdown:
-      enabled: false
+      enabled: true
 
 alert-api:
   ## Paths to save/read cache list
@@ -24,7 +24,7 @@ alert-api:
   ## Time-Zone
   zone: "Europe/Warsaw"
   ## Enable filter out old alerts
-  actual-filter: true
+  actual-filter: false
 
 springdoc:
   api-docs:
