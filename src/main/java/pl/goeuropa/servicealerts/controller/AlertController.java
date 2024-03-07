@@ -142,7 +142,7 @@ public class AlertController {
             log.info("Deleted alert with id : {}", alertId);
             return String.format("Deleted alert with id : %s", alertId);
         } catch (Exception ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT,
                     ex.getMessage() + ex.getCause());
         }
     }
