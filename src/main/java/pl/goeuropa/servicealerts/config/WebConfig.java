@@ -18,11 +18,11 @@ public class WebConfig implements WebMvcConfigurer {
                         "https://transitclock.goeuropa.net",
                         "https://swarzedz.goeuropa.net",
                         "http://goeuropa.net/")
-//                .allowedOriginPatterns("http://localhost:3000",
-//                        "https://alerts.goeuropa.net",
-//                        "https://transitclock.goeuropa.net",
-//                        "https://swarzedz.goeuropa.net",
-//                        "http://goeuropa.net/")
+                .allowedOriginPatterns("http://localhost:3000",
+                        "https://alerts.goeuropa.net",
+                        "https://transitclock.goeuropa.net",
+                        "https://swarzedz.goeuropa.net",
+                        "http://goeuropa.net/")
         ;
     }
 }
