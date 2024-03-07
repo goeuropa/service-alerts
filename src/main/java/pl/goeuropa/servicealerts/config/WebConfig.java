@@ -13,6 +13,11 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedMethods("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH")
-                .allowedOrigins("https://alerts.goeuropa.net", "http://localhost:3000");
+//                .allowedOrigins("https://alerts.goeuropa.net", "http://localhost:3000")
+                .allowedOriginPatterns("http://localhost:3000",
+                        "https://alerts.goeuropa.net",
+                        "https://transitclock.goeuropa.net",
+                        "https://swarzedz.goeuropa.net",
+                        "http://goeuropa.net/");
     }
 }
