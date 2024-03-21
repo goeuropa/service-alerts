@@ -2,6 +2,8 @@ version: "3.18"
 services:
   service-alerts:
     image: timurshyk/service-alerts-server:latest
+    volumes:
+      - ./app/resources/alerts.list:/app/resources/alerts.list
     ports:
       - "8888:8888"
     healthcheck:
