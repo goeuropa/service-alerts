@@ -21,3 +21,7 @@ mvn clean install
 ```shell
 mvn spring-boot:run
 ```
+
+### Api Documentation
+
+#### - after launch you can check out the Swagger:   ☛   [OpenApi documentation](http://localhost:8888/ui)
