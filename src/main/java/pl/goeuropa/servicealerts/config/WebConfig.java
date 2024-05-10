@@ -22,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "https://alerts.goeuropa.net",
                         "https://transitclock.goeuropa.net",
                         "https://swarzedz.goeuropa.net",
-                        "http://goeuropa.net/")
+                        "http://goeuropa.net")
         ;
     }
 }

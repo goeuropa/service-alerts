@@ -1,18 +1,15 @@
 server:
   port: 8888
 
-logging:
-  file:
-    name: logs/logback.txt
+#logging:
+#  file:
+#    name: logs/logback.txt
 
 management:
   endpoints:
     web:
       exposure:
         include: "*"
-    endpoint:
-      shutdown:
-        enabled: true
   endpoint:
     shutdown:
       enabled: true
@@ -25,7 +22,7 @@ alert-api:
   zone: "Europe/Warsaw"
   ## Enable filter out old alerts
   actual-filter: false
-
+##open-api map paths
 springdoc:
   api-docs:
     path: "/docs"
