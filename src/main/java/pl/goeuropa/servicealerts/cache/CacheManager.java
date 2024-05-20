@@ -17,10 +17,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class CacheManager implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class CacheManager {
 
     /**
      * Make this class available as a singleton
