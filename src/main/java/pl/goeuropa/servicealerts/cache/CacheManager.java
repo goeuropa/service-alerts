@@ -11,6 +11,7 @@ import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,7 +38,7 @@ public class CacheManager {
     @Value("${alert-api.out-path}")
     private String OUTPUT_PATH;
 
-    private static List<ServiceAlert> serviceAlertList = new LinkedList<>();
+    private List<ServiceAlert> serviceAlertList = Collections.synchronizedList(new LinkedList<>());
 
     /**
      * Gets the singleton instance of this class.
