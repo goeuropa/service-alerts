@@ -159,7 +159,7 @@ public class AlertController {
                 return ex.getMessage() + ex.getCause();
             }
         throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
-                "Please confirm the cache cleanup by responding with the word \"yes\" in parameters.");
+                "Please confirm the alert list cleanup by responding with the word \"yes\" in parameters.");
     }
 
     @DeleteMapping("/alerts/clean")
@@ -174,6 +174,6 @@ public class AlertController {
                 return ex.getMessage() + ex.getCause();
             }
         throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,
-                "Please confirm the cache cleanup by responding with the word \"yes\" in parameters.");
+                "Please confirm the alert list cleanup by responding with the word \"yes\" in parameters.");
     }
 }
