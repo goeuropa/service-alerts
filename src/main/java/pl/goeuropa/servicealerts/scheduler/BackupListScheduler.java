@@ -67,7 +67,7 @@ public class BackupListScheduler {
     }
 
     @PreDestroy
-    @Scheduled(cron = "daily")
+    @Scheduled(cron = "@daily")
     public void saveAlertsToFile() {
         var serviceAlertList = alertRepository.getServiceAlertsList();
         try {
