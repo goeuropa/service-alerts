@@ -1,5 +1,5 @@
 server:
-  port: 9991
+  port: 8888
 
 #logging:
 #  file:
@@ -17,11 +17,9 @@ management:
 alert-api:
   ## Path to save protobuf file of all alerts
   pb-file:
-    out-path: /var/goeuropa.alerts
+    out-path: /var/goeuropa.pb
   ## Time-Zone
   zone: "Europe/Warsaw"
-  ## Protobuf file refresh-interval
-  refresh-interval: 10
   ## Enable filter out old alerts
   actual-filter: false
   ## Paths to save/read back-up file
