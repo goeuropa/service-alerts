@@ -31,12 +31,12 @@ public class RefreshProtoFileScheduler {
 
     private final AlertRepository alertRepository = AlertRepository.getInstance();
 
-    @Scheduled(cron = "@hourly")
+    @Scheduled(fixedDelay = 60_000)
     public void updateVehiclesPositionsProtoBufFile() {
         try (FileOutputStream toFile = new FileOutputStream(outputPath)) {
 
             GtfsRealtime.FeedMessage feed = getAlerts();
-            log.info("Write to file: {} entities.", feed.getEntityList().size());
+            log.info("Write to file: {}, {} entities.", feed.getEntityList().size(), outputPath);
 
             //Writing to protobuf file
             feed.writeTo(toFile);

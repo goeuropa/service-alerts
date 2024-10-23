@@ -5,9 +5,7 @@ import com.google.transit.realtime.GtfsRealtime;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
@@ -69,12 +67,16 @@ public class AlertController {
 
     @GetMapping(value = "/agency/{agencyId}/alerts.pb", produces = MediaType.APPLICATION_PROTOBUF_VALUE)
     @Operation(summary = "Return a protobuf file with alerts for request agency Id")
-    public ResponseEntity<StreamingResponseBody> getByAgencyAsFile(@PathVariable String agencyId) {
+    public ResponseEntity<Object> getByAgencyAsFile(@PathVariable String agencyId) {
         try {
-            GtfsRealtime.FeedMessage feed = service.getAlertsByAgency(agencyId);
-            log.info("Got {} service-alerts as protobuf file", feed.getSerializedSize());
-            StreamingResponseBody stream = feed::writeTo;
-            return ResponseEntity.ok().body(stream);
+            GtfsRealtime.FeedMessage feedMessage = service.getAlertsByAgency(agencyId);
+            log.info("Got {} service-alerts as protobuf file", feedMessage.getSerializedSize());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PROTOBUF);
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .cacheControl(CacheControl.noCache())
+                    .body(feedMessage);
         } catch (Exception ex) {
             log.error(ex.getMessage());
             return ResponseEntity.noContent().build();
@@ -83,12 +85,16 @@ public class AlertController {
 
     @GetMapping(value = "/alerts.pb", produces = MediaType.APPLICATION_PROTOBUF_VALUE)
     @Operation(summary = "Return a protobuf file sorted by creation time with all alerts from alerts object list")
-    public ResponseEntity<StreamingResponseBody> getAllAsFile() {
+    public ResponseEntity<Object> getAllAsFile() {
         try {
-            GtfsRealtime.FeedMessage feed = service.getAlerts();
-            log.info("Got {} service-alerts as protobuf file", feed.getSerializedSize());
-            StreamingResponseBody stream = feed::writeTo;
-            return ResponseEntity.ok().body(stream);
+            GtfsRealtime.FeedMessage feedMessage = service.getAlerts();
+            log.info("Got {} service-alerts as protobuf file", feedMessage.getSerializedSize());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PROTOBUF);
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .cacheControl(CacheControl.noCache())
+                    .body(feedMessage);
         } catch (Exception ex) {
             log.error(ex.getMessage());
             return ResponseEntity.noContent().build();
