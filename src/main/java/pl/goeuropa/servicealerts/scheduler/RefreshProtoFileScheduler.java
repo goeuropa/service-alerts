@@ -36,7 +36,7 @@ public class RefreshProtoFileScheduler {
         try (FileOutputStream toFile = new FileOutputStream(outputPath)) {
 
             GtfsRealtime.FeedMessage feed = getAlerts();
-            log.info("Write to file: {}, {} entities.", feed.getEntityList().size(), outputPath);
+            log.debug("Write to file: {}, {} entities.", outputPath, feed.getEntityList().size());
 
             //Writing to protobuf file
             feed.writeTo(toFile);

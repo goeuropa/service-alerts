@@ -75,7 +75,7 @@ public class BackupListScheduler {
             var objectToFile = new ObjectOutputStream(toFile);
             objectToFile.writeObject(serviceAlertList);
 
-            log.info("Successfully safe {} alerts to back-up file : {}", serviceAlertList.size(), outputPath);
+            log.debug(" Successfully safe {} alerts to back-up file : {}", serviceAlertList.size(), outputPath);
 
             objectToFile.close();
         } catch (Exception e) {
