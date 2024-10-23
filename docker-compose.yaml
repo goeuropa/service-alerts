@@ -1,15 +1,18 @@
-
 services:
   service-alerts:
     image: wkulesza/service-alerts-server:latest
     volumes:
-      - ./app/resources/alerts.list:/app/resources/alerts.list
+      - alerts-persist:/app/alerts
       - ./src/main/resources/application.yml:/app/resources/application.yml
+      - /tmp/service.alerts.pb:/app/service.alerts.pb
     ports:
-      - "8888:8888"
+      - "9999:8888"
     healthcheck:
       test: "curl --fail --silent localhost:8888/actuator/health | grep UP || exit 1"
       interval: 20s
       timeout: 5s
       retries: 5
       start_period: 40s
+
+volumes:
+  alerts-persist:

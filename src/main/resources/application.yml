@@ -15,16 +15,19 @@ management:
       enabled: false
 
 alert-api:
+  security:
+    password: " "
+    user: " "
   ## Path to save protobuf file of all alerts
   pb-file:
-    out-path: /var/goeuropa.pb
+    out-path: /app/service.alerts.pb
   ## Time-Zone
   zone: "Europe/Warsaw"
   ## Enable filter out old alerts
   actual-filter: false
   ## Paths to save/read back-up file
-  out-path: ./app/resources/alerts.list
-  in-path: ./app/resources/alerts.list
+  out-path: /app/alerts/alerts.list
+  in-path: /app/alerts/alerts.list
 
 ##open-api map paths
 springdoc:
