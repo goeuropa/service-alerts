@@ -28,7 +28,7 @@ public class WebSecurityConfig {
         UserDetails authz = User.withDefaultPasswordEncoder()
                 .username(user)
                 .password(password)
-                .roles("USER")
+                .roles("ADMIN")
                 .build();
 
         return new InMemoryUserDetailsManager(authz);
@@ -38,9 +38,11 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/agency/*/alerts.pb", "/api/alerts.pb").permitAll()
+                        .requestMatchers("/api/**"
+                        )
+                        .hasRole("ADMIN")
                         // Защищаем остальные запросы
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
