@@ -67,36 +67,28 @@ public class AlertController {
 
     @GetMapping(value = "/agency/{agencyId}/alerts.pb", produces = MediaType.APPLICATION_PROTOBUF_VALUE)
     @Operation(summary = "Return a protobuf file with alerts for request agency Id")
-    public ResponseEntity<Object> getByAgencyAsFile(@PathVariable String agencyId) {
+    public ResponseEntity<StreamingResponseBody> getByAgencyAsFile(@PathVariable String agencyId) {
         try {
-            GtfsRealtime.FeedMessage feedMessage = service.getAlertsByAgency(agencyId);
-            log.info("Got {} service-alerts as protobuf file", feedMessage.getSerializedSize());
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_PROTOBUF);
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .cacheControl(CacheControl.noCache())
-                    .body(feedMessage);
+            GtfsRealtime.FeedMessage feed = service.getAlertsByAgency(agencyId);
+            log.info("Got {} service-alerts as protobuf file", feed.getSerializedSize());
+            StreamingResponseBody stream = feed::writeTo;
+            return ResponseEntity.ok().body(stream);
         } catch (Exception ex) {
-            log.error(ex.getMessage());
+            log.warn(ex.getMessage());
             return ResponseEntity.noContent().build();
         }
     }
 
     @GetMapping(value = "/alerts.pb", produces = MediaType.APPLICATION_PROTOBUF_VALUE)
     @Operation(summary = "Return a protobuf file sorted by creation time with all alerts from alerts object list")
-    public ResponseEntity<Object> getAllAsFile() {
+    public ResponseEntity<StreamingResponseBody> getAllAsFile() {
         try {
-            GtfsRealtime.FeedMessage feedMessage = service.getAlerts();
-            log.info("Got {} service-alerts as protobuf file", feedMessage.getSerializedSize());
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_PROTOBUF);
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .cacheControl(CacheControl.noCache())
-                    .body(feedMessage);
+            GtfsRealtime.FeedMessage feed = service.getAlerts();
+            log.info("Got {} service-alerts as protobuf file", feed.getSerializedSize());
+            StreamingResponseBody stream = feed::writeTo;
+            return ResponseEntity.ok().body(stream);
         } catch (Exception ex) {
-            log.error(ex.getMessage());
+            log.warn(ex.getMessage());
             return ResponseEntity.noContent().build();
         }
     }
@@ -109,7 +101,7 @@ public class AlertController {
             log.info("Got {} service-alerts", alertList.size());
             return ResponseEntity.ok().body(alertList);
         } catch (Exception ex) {
-            log.error(ex.getMessage());
+            log.warn(ex.getMessage());
             return ResponseEntity.noContent().build();
         }
     }
@@ -122,7 +114,7 @@ public class AlertController {
             log.info("Got {} service-alerts for agency ID : {}", alertList.size(), agencyId);
             return ResponseEntity.ok().body(alertList);
         } catch (Exception ex) {
-            log.error(ex.getMessage());
+            log.warn(ex.getMessage());
             return ResponseEntity.noContent().build();
         }
     }
