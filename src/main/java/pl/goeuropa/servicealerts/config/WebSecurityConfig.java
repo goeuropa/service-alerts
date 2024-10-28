@@ -41,13 +41,11 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/**"
                         )
                         .hasRole("ADMIN")
-                        // Защищаем остальные запросы
                         .anyRequest().permitAll()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(withDefaults());
-
         return http.build();
     }
 }
