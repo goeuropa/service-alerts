@@ -42,7 +42,7 @@ public class RefreshProtoFileScheduler {
             feed.writeTo(toFile);
 
         } catch (Exception ex) {
-            log.debug(ex.getMessage());
+            log.warn(ex.getMessage());
         }
     }
 
