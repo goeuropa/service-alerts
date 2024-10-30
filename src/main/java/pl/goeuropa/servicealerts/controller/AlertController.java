@@ -70,7 +70,7 @@ public class AlertController {
     public ResponseEntity<StreamingResponseBody> getByAgencyAsFile(@PathVariable String agencyId) {
         try {
             GtfsRealtime.FeedMessage feed = service.getAlertsByAgency(agencyId);
-            log.info("Got {} service-alerts as protobuf file", feed.getSerializedSize());
+            log.info("Got {} service-alerts as protobuf file", feed.getEntityList().size());
             StreamingResponseBody stream = feed::writeTo;
             return ResponseEntity.ok().body(stream);
         } catch (Exception ex) {
@@ -84,7 +84,7 @@ public class AlertController {
     public ResponseEntity<StreamingResponseBody> getAllAsFile() {
         try {
             GtfsRealtime.FeedMessage feed = service.getAlerts();
-            log.info("Got {} service-alerts as protobuf file", feed.getSerializedSize());
+            log.info("Got {} service-alerts as protobuf file", feed.getEntityList().size());
             StreamingResponseBody stream = feed::writeTo;
             return ResponseEntity.ok().body(stream);
         } catch (Exception ex) {
