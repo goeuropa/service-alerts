@@ -19,6 +19,10 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
@@ -88,7 +92,7 @@
                         <image>eclipse-temurin:17-jre</image>
                     </from>
                     <to>
-                        <image>timurshyk/service-alerts-server</image>
+                        <image>wkulesza/service-alerts-server:latest</image>
                     </to>
                 </configuration>
             </plugin>

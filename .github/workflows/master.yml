@@ -1,5 +1,8 @@
 name: Test Master
-on:  push
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   TEST_BACKEND:

@@ -2,4 +2,6 @@ logs
 .git
 .github
 .idea
-app
+src/main/resources
+app/alerts
+
