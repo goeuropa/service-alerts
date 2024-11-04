@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
 import pl.goeuropa.servicealerts.service.AlertService;
@@ -77,33 +78,7 @@ public class AlertControllerTests {
     }
 
     @Test
-    void postNewAlertTest() throws Exception {
-        mockMvc.perform(
-                        post(baseUrl + "/create")
-                                .content("{\"id\":\"-11\",\"agencyId\":\"44\",\"activeWindows\":[{\"from\":\"2011-12-03T10:15:30\",\"to\":\"2011-12-03T10:15:30\"}," +
-                                        "{\"from\":\"2011-12-03T10:15:30\",\"to\":\"2011-12-03T10:15:30\"}],\"cause\":\"OTHER_CAUSE\",\"effect\":\"STOP_MOVED\",\"summaries\":" +
-                                        "[{\"value\":\"someText\",\"lang\":\"pl\"},{\"value\":\"ELxkg\",\"lang\":\"en\"}],\"urls\":[{\"value\":\"http\",\"lang\":\"en\"}," +
-                                        "{\"value\":\"http\",\"lang\":\"en\"}],\"allAffects\":[{\"routeId\":\"HFLDl\",\"tripId\":\"tDRqD\",\"stopId\":\"ejdlV\"," +
-                                        "\"routType\":\"sgeJN\"},{\"routeId\":\"bXVCS\",\"tripId\":\"FWDEr\",\"stopId\":\"Mcnpz\",\"routType\":\"tSOhh\"}]," +
-                                        "\"descriptions\":[{\"value\":\"ELxkg\",\"lang\":\"en\"},{\"value\":\"lTeRG\",\"lang\":\"en\"}]}")
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andDo(print())
-                .andExpect(status().isCreated());
-    }
-
-    @Test
-    void getAlertsAsProtobufTest() throws Exception {
-        when(mockService.getAlerts()).thenReturn(GtfsRealtime.FeedMessage.getDefaultInstance());
-        mockMvc.perform(
-                        get(baseUrl + "/alerts.pb")
-                                .contentType(MediaType.APPLICATION_PROTOBUF_VALUE)
-                )
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    @Test
+    @WithMockUser(roles = "ADMIN")
     void getAlertsAsJsonTest() throws Exception {
 
         mockMvc.perform(
@@ -126,6 +101,37 @@ public class AlertControllerTests {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
+    void postNewAlertTest() throws Exception {
+        mockMvc.perform(
+                        post(baseUrl + "/create")
+                                .content("{\"id\":\"-11\",\"agencyId\":\"44\",\"activeWindows\":[{\"from\":\"2011-12-03T10:15:30\",\"to\":\"2011-12-03T10:15:30\"}," +
+                                        "{\"from\":\"2011-12-03T10:15:30\",\"to\":\"2011-12-03T10:15:30\"}],\"cause\":\"OTHER_CAUSE\",\"effect\":\"STOP_MOVED\",\"summaries\":" +
+                                        "[{\"value\":\"someText\",\"lang\":\"pl\"},{\"value\":\"ELxkg\",\"lang\":\"en\"}],\"urls\":[{\"value\":\"http\",\"lang\":\"en\"}," +
+                                        "{\"value\":\"http\",\"lang\":\"en\"}],\"allAffects\":[{\"routeId\":\"HFLDl\",\"tripId\":\"tDRqD\",\"stopId\":\"ejdlV\"," +
+                                        "\"routType\":\"sgeJN\"},{\"routeId\":\"bXVCS\",\"tripId\":\"FWDEr\",\"stopId\":\"Mcnpz\",\"routType\":\"tSOhh\"}]," +
+                                        "\"descriptions\":[{\"value\":\"ELxkg\",\"lang\":\"en\"},{\"value\":\"lTeRG\",\"lang\":\"en\"}]}")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+
+                .andDo(print())
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void getAlertsAsProtobufTest() throws Exception {
+        when(mockService.getAlerts()).thenReturn(GtfsRealtime.FeedMessage.getDefaultInstance());
+        mockMvc.perform(
+                        get(baseUrl + "/alerts.pb")
+                                .contentType(MediaType.APPLICATION_PROTOBUF_VALUE)
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
     void getAlertsAsJsonByAgencyTest() throws Exception {
 
         mockMvc.perform(
