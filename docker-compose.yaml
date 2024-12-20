@@ -4,7 +4,7 @@ services:
     volumes:
       - alerts-persist:/app/alerts
       - ./src/main/resources/application.yml:/app/resources/application.yml
-      - /tmp/pb:/app/pb/service-alerts_agency_
+      - /tmp/pb:/app/pb
     ports:
       - "9999:8888"
     healthcheck:
