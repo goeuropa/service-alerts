@@ -2,6 +2,7 @@ logs
 .git
 .github
 .idea
-src/main/resources
-app/alerts
 
+test/main/resources
+src/main/resources/application.yml
+app/

@@ -1,21 +1,19 @@
 package pl.goeuropa.servicealerts.scheduler;
 
 import com.google.transit.realtime.GtfsRealtime;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
 import pl.goeuropa.servicealerts.repository.AlertRepository;
-import pl.goeuropa.servicealerts.service.AlertService;
 import pl.goeuropa.servicealerts.utils.AlertBuilderUtil;
 
 import java.io.FileOutputStream;
 import java.time.ZoneId;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static java.time.Instant.now;
 
@@ -31,40 +29,54 @@ public class RefreshProtoFileScheduler {
 
     private final AlertRepository alertRepository = AlertRepository.getInstance();
 
-    @Scheduled(fixedDelay = 60_000)
+    @Scheduled(fixedRateString = "${alert-api.pb-file.interval}",
+            timeUnit = TimeUnit.SECONDS)
     public void updateVehiclesPositionsProtoBufFile() {
-        try (FileOutputStream toFile = new FileOutputStream(outputPath)) {
 
-            GtfsRealtime.FeedMessage feed = getAlerts();
-            log.debug("Write to file: {}, {} entities.", outputPath, feed.getEntityList().size());
+        List<String> agencyIds = alertRepository.getServiceAlertsList().stream()
+                .map(ServiceAlert::getAgencyId).toList();
 
-            //Writing to protobuf file
-            feed.writeTo(toFile);
+        for (String agencyId : agencyIds) {
+            try (FileOutputStream toFile = new FileOutputStream(outputPath + agencyId)) {
+                GtfsRealtime.FeedMessage feed = getAlertsByAgency(agencyId);
+                log.debug("Write to file: {}, {} entities.", outputPath, feed.getEntityList().size());
 
-        } catch (Exception ex) {
-            log.warn(ex.getMessage());
+                //Writing to protobuf file
+                feed.writeTo(toFile);
+
+            } catch (Exception ex) {
+                log.warn(ex.getMessage());
+            }
         }
     }
 
-    private GtfsRealtime.FeedMessage getAlerts() {
-        List<ServiceAlert> listOfAlerts;
+    private GtfsRealtime.FeedMessage getAlertsByAgency(String agencyId) throws RuntimeException {
+        List<ServiceAlert> unfilteredListOfAlerts;
+        List<ServiceAlert> filteredListOfAlerts;
         if (!alertRepository.getServiceAlertsList().isEmpty()) {
-            listOfAlerts = alertRepository.getServiceAlertsList();
+            unfilteredListOfAlerts = alertRepository.getServiceAlertsList();
+            filteredListOfAlerts = unfilteredListOfAlerts
+                    .stream()
+                    .filter(alert -> alert.getAgencyId().equals(agencyId)
+                    )
+                    .collect(Collectors.toList());
 
             GtfsRealtime.FeedMessage.Builder feed = GtfsRealtime.FeedMessage.newBuilder();
             GtfsRealtime.FeedHeader.Builder header = feed.getHeaderBuilder();
             header.setGtfsRealtimeVersion("2.0");
             header.setTimestamp(getDateTimeNow() / 1000);
-            List<ServiceAlert> sortedListOfAlerts = listOfAlerts.stream()
-                    .sorted(Comparator.comparingLong(ServiceAlert::getCreationTime))
-                    .collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
-            AlertBuilderUtil.fillFeedMessage(feed, sortedListOfAlerts, zoneId);
+
+            if (filteredListOfAlerts.isEmpty())
+                throw new IllegalStateException(String.format("List of alerts is empty for agencyId: %s", agencyId));
+
+            AlertBuilderUtil.fillFeedMessage(feed, filteredListOfAlerts, zoneId);
+            log.debug("Got {} service-alerts for agencyId {} ", filteredListOfAlerts.size(), agencyId);
             return feed.build();
         }
         throw new IllegalStateException("List of alerts is empty");
     }
 
-    private long getDateTimeNow () {
+    private long getDateTimeNow() {
         return now()
                 .atZone(ZoneId.of(zoneId))
                 .toEpochSecond();
