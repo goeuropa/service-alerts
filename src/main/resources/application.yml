@@ -20,7 +20,7 @@ alert-api:
     user: " "
   ## Path to save protobuf file of all alerts
   pb-file:
-    insterval: 30
+    interval: 30
     out-path: /app/pb/service-alerts_agency_
   ## Time-Zone
   zone: "Europe/Warsaw"
