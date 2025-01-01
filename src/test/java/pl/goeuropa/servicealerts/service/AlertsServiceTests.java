@@ -5,6 +5,7 @@ import org.jeasy.random.EasyRandomParameters;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import pl.goeuropa.servicealerts.repository.AlertRepository;
 import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
 
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 import static java.nio.charset.Charset.forName;
 import static org.junit.jupiter.api.Assertions.*;
 
+@ActiveProfiles("test")
 @SpringBootTest
 class AlertsServiceTests {
 

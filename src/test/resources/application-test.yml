@@ -1,0 +1,18 @@
+server:
+  port: 8080
+alert-api:
+  security:
+    user: "test"
+    password: "test"
+  ## Paths to save/read backup list
+  out-path: ./app/resources/alerts.list
+  in-path: ./app/resources/alerts.list
+  ## Time-Zone
+  zone: "Europe/Warsaw"
+  ## Enable filter out old alerts
+  actual-filter: false
+springdoc:
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false

@@ -1,6 +1,7 @@
 package pl.goeuropa.servicealerts.utils;
 
 import com.google.transit.realtime.GtfsRealtime;
+import com.google.transit.realtime.GtfsRealtime.Alert;
 import pl.goeuropa.servicealerts.model.servicealerts.NaturalLanguageString;
 import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
 import pl.goeuropa.servicealerts.model.servicealerts.SituationAffects;
@@ -21,7 +22,7 @@ public class AlertBuilderUtil {
             GtfsRealtime.FeedEntity.Builder entity = feed.addEntityBuilder();
 
             entity.setId(Integer.toString(feed.getEntityCount()));
-            GtfsRealtime.Alert.Builder alert = entity.getAlertBuilder();
+            Alert.Builder alert = entity.getAlertBuilder();
 
             alert.setCause(toCause(serviceAlert.getCause()));
 
@@ -81,34 +82,34 @@ public class AlertBuilderUtil {
         }
     }
 
-    static GtfsRealtime.Alert.Cause toCause(String reason) {
+    static Alert.Cause toCause(String reason) {
         return switch (reason) {
-            case "OTHER_CAUSE" -> GtfsRealtime.Alert.Cause.OTHER_CAUSE;
-            case "TECHNICAL_PROBLEM" -> GtfsRealtime.Alert.Cause.TECHNICAL_PROBLEM;
-            case "STRIKE" -> GtfsRealtime.Alert.Cause.STRIKE;
-            case "DEMONSTRATION" -> GtfsRealtime.Alert.Cause.DEMONSTRATION;
-            case "ACCIDENT" -> GtfsRealtime.Alert.Cause.ACCIDENT;
-            case "HOLIDAY" -> GtfsRealtime.Alert.Cause.HOLIDAY;
-            case "WEATHER" -> GtfsRealtime.Alert.Cause.WEATHER;
-            case "MAINTENANCE" -> GtfsRealtime.Alert.Cause.MAINTENANCE;
-            case "CONSTRUCTION" -> GtfsRealtime.Alert.Cause.CONSTRUCTION;
-            case "POLICE_ACTIVITY" -> GtfsRealtime.Alert.Cause.POLICE_ACTIVITY;
-            case "MEDICAL_EMERGENCY" -> GtfsRealtime.Alert.Cause.MEDICAL_EMERGENCY;
-            default -> GtfsRealtime.Alert.Cause.UNKNOWN_CAUSE;
+            case "OTHER_CAUSE" -> Alert.Cause.OTHER_CAUSE;
+            case "TECHNICAL_PROBLEM" -> Alert.Cause.TECHNICAL_PROBLEM;
+            case "STRIKE" -> Alert.Cause.STRIKE;
+            case "DEMONSTRATION" -> Alert.Cause.DEMONSTRATION;
+            case "ACCIDENT" -> Alert.Cause.ACCIDENT;
+            case "HOLIDAY" -> Alert.Cause.HOLIDAY;
+            case "WEATHER" -> Alert.Cause.WEATHER;
+            case "MAINTENANCE" -> Alert.Cause.MAINTENANCE;
+            case "CONSTRUCTION" -> Alert.Cause.CONSTRUCTION;
+            case "POLICE_ACTIVITY" -> Alert.Cause.POLICE_ACTIVITY;
+            case "MEDICAL_EMERGENCY" -> Alert.Cause.MEDICAL_EMERGENCY;
+            default -> Alert.Cause.UNKNOWN_CAUSE;
         };
     }
 
-    static GtfsRealtime.Alert.Effect toEffect(String conclusion) {
+    static Alert.Effect toEffect(String conclusion) {
         return switch (conclusion) {
-            case "ADDITIONAL_SERVICE" -> GtfsRealtime.Alert.Effect.ADDITIONAL_SERVICE;
-            case "DETOUR" -> GtfsRealtime.Alert.Effect.DETOUR;
-            case "MODIFIED_SERVICE" -> GtfsRealtime.Alert.Effect.MODIFIED_SERVICE;
-            case "NO_SERVICE" -> GtfsRealtime.Alert.Effect.NO_SERVICE;
-            case "OTHER_EFFECT" -> GtfsRealtime.Alert.Effect.OTHER_EFFECT;
-            case "REDUCED_SERVICE" -> GtfsRealtime.Alert.Effect.REDUCED_SERVICE;
-            case "SIGNIFICANT_DELAYS" -> GtfsRealtime.Alert.Effect.SIGNIFICANT_DELAYS;
-            case "STOP_MOVED" -> GtfsRealtime.Alert.Effect.STOP_MOVED;
-            default -> GtfsRealtime.Alert.Effect.UNKNOWN_EFFECT;
+            case "ADDITIONAL_SERVICE" -> Alert.Effect.ADDITIONAL_SERVICE;
+            case "DETOUR" -> Alert.Effect.DETOUR;
+            case "MODIFIED_SERVICE" -> Alert.Effect.MODIFIED_SERVICE;
+            case "NO_SERVICE" -> Alert.Effect.NO_SERVICE;
+            case "OTHER_EFFECT" -> Alert.Effect.OTHER_EFFECT;
+            case "REDUCED_SERVICE" -> Alert.Effect.REDUCED_SERVICE;
+            case "SIGNIFICANT_DELAYS" -> Alert.Effect.SIGNIFICANT_DELAYS;
+            case "STOP_MOVED" -> Alert.Effect.STOP_MOVED;
+            default -> Alert.Effect.UNKNOWN_EFFECT;
         };
     }
 }
