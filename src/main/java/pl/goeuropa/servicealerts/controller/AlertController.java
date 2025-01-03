@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
@@ -16,6 +17,7 @@ import java.util.List;
 
 
 @Slf4j
+@Validated
 @RestController
 @Tag(name = "Service-alerts",
         description = "Service-alert api allow you to provide updates whenever there is disruption on the network. Delays and cancellations of individual trips should usually be communicated using Trip updates.")

@@ -27,7 +27,11 @@ public final class SituationAffects implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    private String agencyId;
+
     private String routeId;
+
+    private String directionId;
 
     private String tripId;
 
