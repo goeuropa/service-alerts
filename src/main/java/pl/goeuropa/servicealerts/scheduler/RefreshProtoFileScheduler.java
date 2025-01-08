@@ -37,7 +37,7 @@ public class RefreshProtoFileScheduler {
                 .map(ServiceAlert::getAgencyId).toList();
 
         for (String agencyId : agencyIds) {
-            try (FileOutputStream toFile = new FileOutputStream(outputPath + agencyId)) {
+            try (FileOutputStream toFile = new FileOutputStream(outputPath + agencyId + ".pb")) {
                 GtfsRealtime.FeedMessage feed = getAlertsByAgency(agencyId);
                 log.debug("Write to file: {}, {} entities.", outputPath, feed.getEntityList().size());
 
@@ -57,7 +57,10 @@ public class RefreshProtoFileScheduler {
             unfilteredListOfAlerts = alertRepository.getServiceAlertsList();
             filteredListOfAlerts = unfilteredListOfAlerts
                     .stream()
-                    .filter(alert -> alert.getAgencyId().equals(agencyId)
+                    .filter(
+                            alert -> alert.getActiveWindows().get(0).getLongTo(zoneId) >= getDateTimeNow()
+                                    &&
+                                    alert.getAgencyId().equals(agencyId)
                     )
                     .collect(Collectors.toList());
 
@@ -67,7 +70,7 @@ public class RefreshProtoFileScheduler {
             header.setTimestamp(getDateTimeNow() / 1000);
 
             if (filteredListOfAlerts.isEmpty())
-                throw new IllegalStateException(String.format("List of alerts is empty for agencyId: %s", agencyId));
+                log.debug("There aren't any actual alerts for agencyId: %s", agencyId);
 
             AlertBuilderUtil.fillFeedMessage(feed, filteredListOfAlerts, zoneId);
             log.debug("Got {} service-alerts for agencyId {} ", filteredListOfAlerts.size(), agencyId);
