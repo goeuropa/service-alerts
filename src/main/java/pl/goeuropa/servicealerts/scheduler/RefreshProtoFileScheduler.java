@@ -37,7 +37,7 @@ public class RefreshProtoFileScheduler {
                 .map(ServiceAlert::getAgencyId).toList();
 
         for (String agencyId : agencyIds) {
-            try (FileOutputStream toFile = new FileOutputStream(outputPath + agencyId + ".pb")) {
+            try (FileOutputStream toFile = new FileOutputStream(outputPath + agencyId)) {
                 GtfsRealtime.FeedMessage feed = getAlertsByAgency(agencyId);
                 log.debug("Write to file: {}, {} entities.", outputPath, feed.getEntityList().size());
 

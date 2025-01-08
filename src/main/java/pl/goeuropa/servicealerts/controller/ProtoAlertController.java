@@ -25,7 +25,7 @@ public class ProtoAlertController {
     public ResponseEntity<Object> getByAgencyAsFile(@PathVariable String agencyId) {
         try {
             GtfsRealtime.FeedMessage feedMessage = service.getAlertsByAgency(agencyId);
-            log.info("Got {} service-alerts as protobuf file", feedMessage.getEntityList().size());
+            log.info("Get {} service-alerts as protobuf file", feedMessage.getEntityList().size());
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PROTOBUF);
             return ResponseEntity.ok()
@@ -43,7 +43,7 @@ public class ProtoAlertController {
     public ResponseEntity<Object> getAllAsFile() {
         try {
             GtfsRealtime.FeedMessage feedMessage = service.getAlerts();
-            log.info("Got {} service-alerts as protobuf file", feedMessage.getEntityList().size());
+            log.info("Get {} service-alerts as protobuf file", feedMessage.getEntityList().size());
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PROTOBUF);
             return ResponseEntity.ok()
