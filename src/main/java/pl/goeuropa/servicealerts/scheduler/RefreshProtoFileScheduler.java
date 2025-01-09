@@ -5,13 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
+import pl.goeuropa.servicealerts.model.ServiceAlert;
 import pl.goeuropa.servicealerts.repository.AlertRepository;
 import pl.goeuropa.servicealerts.utils.AlertBuilderUtil;
 
 import java.io.FileOutputStream;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -31,30 +32,33 @@ public class RefreshProtoFileScheduler {
 
     @Scheduled(fixedRateString = "${alert-api.pb-file.interval}",
             timeUnit = TimeUnit.SECONDS)
-    public void updateVehiclesPositionsProtoBufFile() {
+    public void updateServiceAlertsProtoBufFile() {
 
-        List<String> agencyIds = alertRepository.getServiceAlertsList().stream()
-                .map(ServiceAlert::getAgencyId).toList();
+        Set<String> agencyIds = alertRepository.getAgencyIds();
 
         for (String agencyId : agencyIds) {
-            try (FileOutputStream toFile = new FileOutputStream(outputPath + agencyId)) {
-                GtfsRealtime.FeedMessage feed = getAlertsByAgency(agencyId);
-                log.debug("Write to file: {}, {} entities.", outputPath, feed.getEntityList().size());
+            writeToFile(agencyId);
+        }
+    }
 
-                //Writing to protobuf file
-                feed.writeTo(toFile);
+    private void writeToFile(String agencyId) {
+        try (FileOutputStream toFile = new FileOutputStream(outputPath + agencyId)) {
+            GtfsRealtime.FeedMessage feed = getAlertsByAgency(agencyId);
+            log.debug("Write to file: {}, {} entities.", outputPath, feed.getEntityList().size());
 
-            } catch (Exception ex) {
-                log.warn(ex.getMessage());
-            }
+            //Writing to protobuf file
+            feed.writeTo(toFile);
+
+        } catch (Exception ex) {
+            log.warn(ex.getMessage());
         }
     }
 
     private GtfsRealtime.FeedMessage getAlertsByAgency(String agencyId) throws RuntimeException {
         List<ServiceAlert> unfilteredListOfAlerts;
         List<ServiceAlert> filteredListOfAlerts;
-        if (!alertRepository.getServiceAlertsList().isEmpty()) {
-            unfilteredListOfAlerts = alertRepository.getServiceAlertsList();
+        if (!alertRepository.getServiceAlertList().isEmpty()) {
+            unfilteredListOfAlerts = alertRepository.getServiceAlertList();
             filteredListOfAlerts = unfilteredListOfAlerts
                     .stream()
                     .filter(

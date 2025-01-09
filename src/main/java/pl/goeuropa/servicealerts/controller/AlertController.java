@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
+import pl.goeuropa.servicealerts.model.ServiceAlert;
 import pl.goeuropa.servicealerts.service.AlertService;
 
 import java.util.List;

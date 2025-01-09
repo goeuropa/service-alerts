@@ -14,28 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pl.goeuropa.servicealerts.model.servicealerts;
+package pl.goeuropa.servicealerts.model;
 
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 @Data
-public final class SituationAffects implements Serializable {
+@AllArgsConstructor
+public class NaturalLanguageString implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private String agencyId;
+    private String value;
+    @Size (min = 2, max = 3)
+    private String lang;
 
-    private String routeId;
-
-    private String directionId;
-
-    private String tripId;
-
-    private String stopId;
-
-    private String routeType;
 }

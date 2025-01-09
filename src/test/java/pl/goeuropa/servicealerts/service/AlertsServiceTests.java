@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import pl.goeuropa.servicealerts.repository.AlertRepository;
-import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
+import pl.goeuropa.servicealerts.model.ServiceAlert;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,20 +54,20 @@ class AlertsServiceTests {
 
     @Test
     void createDeleteAlertTest() {
-        int beforeCreateCount = inst.getServiceAlertsList().size();
+        int beforeCreateCount = inst.getServiceAlertList().size();
         ServiceAlert test = getGenerator().nextObject(ServiceAlert.class);
 
         testService.createAlert(test);
         assertEquals(beforeCreateCount + 1, testService.getAlertList().size());
         // Rollback
         testService.deleteAlertById(test.getId());
-        assertEquals(beforeCreateCount, inst.getServiceAlertsList().size());
+        assertEquals(beforeCreateCount, inst.getServiceAlertList().size());
     }
 
     @Test
     void getAlertsByAgencyId() {
 
-        inst.getServiceAlertsList().addAll(alertListInit());
+        inst.getServiceAlertList().addAll(alertListInit());
         Set<String> agencyIds = alertListInit().stream()
                 .map(ServiceAlert::getAgencyId)
                 .collect(Collectors.toSet());
@@ -90,7 +90,7 @@ class AlertsServiceTests {
 
     @Test
     void updateAlertTest() {
-        inst.getServiceAlertsList().addAll(alertListInit());
+        inst.getServiceAlertList().addAll(alertListInit());
         Set<String> listIds = alertListInit().stream()
                 .map(ServiceAlert::getId)
                 .collect(Collectors.toSet());

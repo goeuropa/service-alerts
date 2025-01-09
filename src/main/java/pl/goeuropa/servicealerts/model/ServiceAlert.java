@@ -1,4 +1,4 @@
-package pl.goeuropa.servicealerts.model.servicealerts;
+package pl.goeuropa.servicealerts.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
@@ -6,10 +6,7 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.ZoneOffset;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import static java.time.LocalDateTime.now;
 

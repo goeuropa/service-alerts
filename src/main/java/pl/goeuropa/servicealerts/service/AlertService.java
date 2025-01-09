@@ -2,7 +2,7 @@ package pl.goeuropa.servicealerts.service;
 
 
 import com.google.transit.realtime.GtfsRealtime;
-import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
+import pl.goeuropa.servicealerts.model.ServiceAlert;
 
 import java.util.LinkedList;
 import java.util.List;
