@@ -1,24 +1,11 @@
 server:
   port: 8888
 
-#logging:
-#  file:
-#    name: logs/logback.txt
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    shutdown:
-      enabled: false
-
 alert-api:
   security:
     password: " "
     user: " "
-  ## Path to save protobuf file of all alerts
+  ## Path to save protobuf files for each agency
   pb-file:
     interval: 30
     out-path: /app/pb/service-alerts_agency_

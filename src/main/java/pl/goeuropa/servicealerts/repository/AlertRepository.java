@@ -1,11 +1,10 @@
 package pl.goeuropa.servicealerts.repository;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
+import pl.goeuropa.servicealerts.model.ServiceAlert;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 public class AlertRepository {
@@ -15,7 +14,8 @@ public class AlertRepository {
      */
     private static final AlertRepository singleton = new AlertRepository();
 
-    private List<ServiceAlert> serviceAlertList = Collections.synchronizedList(new LinkedList<>());
+    @Getter
+    private final List<ServiceAlert> serviceAlertList = Collections.synchronizedList(new LinkedList<>());
 
     /**
      * Gets the singleton instance of this class.
@@ -33,13 +33,16 @@ public class AlertRepository {
     private AlertRepository() {
     }
 
-    public void addToAlertList(ServiceAlert alert) {
-        log.info("Add to list a service alert : {}", alert);
-        serviceAlertList.add(alert);
-    }
+    /**
+     * Set of agency IDs.
+     */
+    @Getter
+    private final Set<String> agencyIds = new HashSet<>();
 
-    public List<ServiceAlert> getServiceAlertsList() {
-        return serviceAlertList;
+    public void addToAlertList(ServiceAlert alert) {
+        agencyIds.add(alert.getAgencyId());
+        serviceAlertList.add(alert);
+        log.info("Add to list a service alert : {}", alert);
     }
 
     public void clearServiceAlertsList() {

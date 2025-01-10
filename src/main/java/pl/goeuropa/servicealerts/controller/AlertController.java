@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-import pl.goeuropa.servicealerts.model.servicealerts.ServiceAlert;
+import pl.goeuropa.servicealerts.model.ServiceAlert;
 import pl.goeuropa.servicealerts.service.AlertService;
 
 import java.util.List;
@@ -72,7 +72,7 @@ public class AlertController {
     public ResponseEntity<StreamingResponseBody> getByAgencyAsFile(@PathVariable String agencyId) {
         try {
             GtfsRealtime.FeedMessage feed = service.getAlertsByAgency(agencyId);
-            log.info("Got {} service-alerts as protobuf file", feed.getEntityList().size());
+            log.info("Get {} service-alerts as protobuf file", feed.getEntityList().size());
             StreamingResponseBody stream = feed::writeTo;
             return ResponseEntity.ok().body(stream);
         } catch (Exception ex) {
@@ -86,7 +86,7 @@ public class AlertController {
     public ResponseEntity<StreamingResponseBody> getAllAsFile() {
         try {
             GtfsRealtime.FeedMessage feed = service.getAlerts();
-            log.info("Got {} service-alerts as protobuf file", feed.getEntityList().size());
+            log.info("Get {} service-alerts as protobuf file", feed.getEntityList().size());
             StreamingResponseBody stream = feed::writeTo;
             return ResponseEntity.ok().body(stream);
         } catch (Exception ex) {
@@ -100,7 +100,7 @@ public class AlertController {
     public ResponseEntity<List<ServiceAlert>> getAllAsJson() {
         try {
             List<ServiceAlert> alertList = service.getAlertList();
-            log.info("Got {} service-alerts", alertList.size());
+            log.info("Get {} service-alerts", alertList.size());
             return ResponseEntity.ok().body(alertList);
         } catch (Exception ex) {
             log.warn(ex.getMessage());
@@ -113,7 +113,7 @@ public class AlertController {
     public ResponseEntity<List<ServiceAlert>> getByAgencyIdAsJson(@PathVariable String agencyId) {
         try {
             List<ServiceAlert> alertList = service.getAlertListByAgency(agencyId);
-            log.info("Got {} service-alerts for agency ID : {}", alertList.size(), agencyId);
+            log.info("Get {} service-alerts for agency ID : {}", alertList.size(), agencyId);
             return ResponseEntity.ok().body(alertList);
         } catch (Exception ex) {
             log.warn(ex.getMessage());
