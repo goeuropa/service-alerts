@@ -50,7 +50,11 @@ public class RefreshProtoFileScheduler {
             feed.writeTo(toFile);
 
         } catch (Exception ex) {
-            log.warn(ex.getMessage());
+            if (ex instanceof IllegalStateException) {
+                log.debug(ex.getMessage());
+            } else {
+                log.warn(ex.getMessage());
+            }
         }
     }
 
